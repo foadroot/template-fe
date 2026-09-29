@@ -2,6 +2,13 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* Body text is Satoshi, per the design's Typography style guide. It is on neither Google
+   Fonts nor Fontsource, so it is loaded from Fontshare — the source the design's own style
+   guide points at. That stylesheet is requested with a hoisted <link> in app/layout.tsx
+   rather than a CSS @import here, because Tailwind expands its own imports above this
+   file's rules and an @import after a rule is invalid CSS. Headings are Poppins, loaded
+   through next/font. */
+
 @custom-variant dark (&:is(.dark *));
 
 /* ---------------------------------------------------------------------------
@@ -14,6 +21,14 @@
   --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
+
+  /* Brand typography — additive. `--font-sans` and `--font-heading` above stay on Geist so
+     the dashboard (and the Card primitive, which uses `font-heading`) renders exactly as
+     before. The marketing surface opts in with `font-body` / `font-display`.
+     Source: design Typography style guide, frame 73:1039. */
+  --font-body: "Satoshi", ui-sans-serif, system-ui, sans-serif;
+  --font-display:
+    var(--font-poppins), "Satoshi", ui-sans-serif, system-ui, sans-serif;
 
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -53,6 +68,72 @@
   --color-table-row-alt: var(--table-row-alt);
   --color-icon-strong: var(--icon-strong);
 
+  /* Brand extensions — ByteSpace marketing surface.
+     Additive by design: the dashboard tokens above are untouched, so protected
+     routes keep rendering exactly as before (design.md D1).
+
+     Palette ramps are namespaced `brand-` so they never shadow Tailwind's own
+     `violet` / `neutral` palettes. Values are read from the design's Colors style
+     guide, frame 73:753. */
+  --color-brand-violet-50: var(--brand-violet-50);
+  --color-brand-violet-100: var(--brand-violet-100);
+  --color-brand-violet-200: var(--brand-violet-200);
+  --color-brand-violet-300: var(--brand-violet-300);
+  --color-brand-violet-400: var(--brand-violet-400);
+  --color-brand-violet-500: var(--brand-violet-500);
+  --color-brand-violet-600: var(--brand-violet-600);
+  --color-brand-violet-700: var(--brand-violet-700);
+  --color-brand-violet-800: var(--brand-violet-800);
+  --color-brand-violet-900: var(--brand-violet-900);
+  --color-brand-violet-950: var(--brand-violet-950);
+  --color-brand-lime-50: var(--brand-lime-50);
+  --color-brand-lime-100: var(--brand-lime-100);
+  --color-brand-lime-200: var(--brand-lime-200);
+  --color-brand-lime-300: var(--brand-lime-300);
+  --color-brand-lime-400: var(--brand-lime-400);
+  --color-brand-lime-500: var(--brand-lime-500);
+  --color-brand-lime-600: var(--brand-lime-600);
+  --color-brand-lime-700: var(--brand-lime-700);
+  --color-brand-lime-800: var(--brand-lime-800);
+  --color-brand-lime-900: var(--brand-lime-900);
+  --color-brand-lime-950: var(--brand-lime-950);
+  --color-brand-neutral-50: var(--brand-neutral-50);
+  --color-brand-neutral-100: var(--brand-neutral-100);
+  --color-brand-neutral-200: var(--brand-neutral-200);
+  --color-brand-neutral-300: var(--brand-neutral-300);
+  --color-brand-neutral-400: var(--brand-neutral-400);
+  --color-brand-neutral-500: var(--brand-neutral-500);
+  --color-brand-neutral-600: var(--brand-neutral-600);
+  --color-brand-neutral-700: var(--brand-neutral-700);
+  --color-brand-neutral-800: var(--brand-neutral-800);
+  --color-brand-neutral-900: var(--brand-neutral-900);
+  --color-brand-neutral-950: var(--brand-neutral-950);
+
+  /* Semantic brand roles */
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-strong: var(--brand-primary-strong);
+  --color-brand-primary-hover: var(--brand-primary-hover);
+  --color-brand-primary-border: var(--brand-primary-border);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-accent-strong: var(--brand-accent-strong);
+  --color-brand-accent-hover: var(--brand-accent-hover);
+  --color-brand-accent-wash: var(--brand-accent-wash);
+  --color-brand-on-primary: var(--brand-on-primary);
+  --color-brand-on-accent: var(--brand-on-accent);
+  --color-brand-surface: var(--brand-surface);
+  --color-brand-surface-muted: var(--brand-surface-muted);
+  --color-brand-card: var(--brand-card);
+  --color-brand-border: var(--brand-border);
+  --color-brand-border-soft: var(--brand-border-soft);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-foreground-soft: var(--brand-foreground-soft);
+  --color-brand-foreground-ink: var(--brand-foreground-ink);
+  --color-brand-muted-foreground: var(--brand-muted-foreground);
+  --color-brand-section: var(--brand-section);
+  --color-brand-chip: var(--brand-chip);
+  --color-brand-eyebrow: var(--brand-eyebrow);
+  --color-brand-accent-muted: var(--brand-accent-muted);
+
   /* Status scale — 6 hues x 3 tiers */
   --color-status-green: var(--status-green);
   --color-status-green-soft: var(--status-green-soft);
@@ -79,11 +160,69 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
+  /* Brand radius — the marketing surface uses noticeably rounder corners than the
+     dashboard, plus a full pill for controls. */
+  --radius-brand-card: var(--brand-radius-card);
+  --radius-brand-panel: var(--brand-radius-panel);
+  --radius-brand-pill: var(--brand-radius-pill);
+
+  /* Brand type scale — read from the design's Typography style guide (frame 73:1039).
+     Headings: Poppins SemiBold, 120% line height, -1% tracking.
+     Body: Satoshi Regular. Labels: Satoshi Medium, 120% line height.
+     Registered here so `text-heading-l`, `text-body-m`, `text-label-s` and friends
+     resolve as real font-size utilities that carry their own line height. */
+  --text-heading-l: 72px;
+  --text-heading-l--line-height: 1.2;
+  --text-heading-l--letter-spacing: -0.01em;
+  /* 48px sits between the display headline (72) and the section headline (44): it is
+     the hero's "55%" figure and the showcase's progress figure (nodes 1:1800, 5:...). */
+  --text-heading-xl: 48px;
+  --text-heading-xl--line-height: 1.2;
+  --text-heading-xl--letter-spacing: -0.01em;
+  --text-heading-m: 44px;
+  --text-heading-m--line-height: 1.2;
+  --text-heading-m--letter-spacing: -0.01em;
+  --text-heading-s: 36px;
+  --text-heading-s--line-height: 1.2;
+  --text-heading-s--letter-spacing: -0.01em;
+  --text-heading-xs: 20px;
+  --text-heading-xs--line-height: 1.2;
+  --text-heading-xs--letter-spacing: -0.01em;
+  --text-body-l: 18px;
+  --text-body-l--line-height: 1.6;
+  --text-body-m: 16px;
+  --text-body-m--line-height: 1.5;
+  --text-body-s: 14px;
+  --text-body-s--line-height: 1.6;
+  --text-body-xs: 12px;
+  --text-body-xs--line-height: 1.6;
+  --text-label-l: 18px;
+  --text-label-l--line-height: 1.2;
+  --text-label-m: 16px;
+  --text-label-m--line-height: 1.2;
+  --text-label-s: 14px;
+  --text-label-s--line-height: 1.2;
+  --text-label-xs: 12px;
+  --text-label-xs--line-height: 1.2;
+
   /* Layout constants */
   --spacing-header: 60px;
   --spacing-sidebar: 240px;
   --spacing-sidebar-collapsed: 80px;
-  --spacing-content: 1400px;
+
+  /* Marketing content column — `max-w-content`, the box `Container` draws.
+
+     The design's 12-column grid is 1200px wide at 1440 (1440 less 2 x 120px margins,
+     frame 73:1014). `Container` also carries a 24px gutter for narrower viewports, and
+     that padding lives inside the box — so the key is 1200 + 2x24, which lands the inner
+     column exactly on the design's 120px / 1320px edges at 1440.
+
+     Two traps here: the value must be a literal (a theme value pointing at a plain
+     `:root` variable does not resolve while Tailwind compiles), and no `--spacing-content`
+     key may exist — `max-w-*` looks up `--max-width-*`, then `--spacing-*`, then
+     `--container-*`, so a stray `--spacing-content` would silently win and lay the public
+     site out at that value instead. */
+  --container-content: 1248px;
 }
 
 :root {
@@ -177,8 +316,118 @@
   --chart-5: #dc2626;
 
   /* Shadows */
-  --shadow-figma: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-figma:
+    0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-card:
+    0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+  /* ===========================================================================
+     ByteSpace design tokens — READ FROM THE DESIGN FILE
+     ===========================================================================
+     Source: the file's "Style Guide" page.
+       Colours  frame 73:753  ("01 Colors")
+       Grid     frame 73:1014 ("03 Layout Grid")
+       Type     frame 73:1039 ("01 Typography")
+
+     The file publishes no Figma styles (the styles API returns zero), so those
+     three frames are the only source of truth. Ramp values are copied verbatim
+     from the frames' own labels; the semantic roles below are additionally
+     verified against rendered frames — the brand surface, for example, is the
+     Violet 800 fill, confirmed by sampling frame 1:1695 (863k pixels of #003be2).
+
+     Radii are the one remaining inference: the style guide has no radius section,
+     so the shape values are measured from rendered frames rather than read as
+     tokens. Tracked as an open question in design.md.
+     =========================================================================== */
+
+  /* Primary — Electric Violet */
+  --brand-violet-50: #e7f6ff;
+  --brand-violet-100: #d3eeff;
+  --brand-violet-200: #b0ddff;
+  --brand-violet-300: #81c5ff;
+  --brand-violet-400: #4f9dff;
+  --brand-violet-500: #2872ff;
+  --brand-violet-600: #0445ff;
+  --brand-violet-700: #0043ff;
+  --brand-violet-800: #003be2;
+  --brand-violet-900: #0b36a4;
+  --brand-violet-950: #071e5f;
+
+  /* Secondary — the file names this ramp "Crimson"; the swatches themselves are
+     chartreuse, and the accent reads as lime in every rendered frame. */
+  --brand-lime-50: #fdffe4;
+  --brand-lime-100: #faffc5;
+  --brand-lime-200: #f2ff92;
+  --brand-lime-300: #e4ff54;
+  --brand-lime-400: #d4fb20;
+  --brand-lime-500: #cbfc01;
+  --brand-lime-600: #8cb400;
+  --brand-lime-700: #6a8902;
+  --brand-lime-800: #546b09;
+  --brand-lime-900: #465a0d;
+  --brand-lime-950: #243300;
+
+  /* Neutral — Black */
+  --brand-neutral-50: #f5f5f6;
+  --brand-neutral-100: #e5e6e8;
+  --brand-neutral-200: #ced0d3;
+  --brand-neutral-300: #abaeb5;
+  --brand-neutral-400: #82868e;
+  --brand-neutral-500: #666973;
+  --brand-neutral-600: #585a62;
+  --brand-neutral-700: #4b4c53;
+  --brand-neutral-800: #424348;
+  --brand-neutral-900: #3a3b3f;
+  --brand-neutral-950: #242528;
+
+  /* Semantic roles */
+  --brand-primary: var(
+    --brand-violet-800
+  ); /* nav, hero and other brand surfaces */
+  --brand-primary-strong: var(--brand-violet-900);
+  --brand-primary-hover: var(--brand-violet-900);
+  --brand-primary-border: var(--brand-violet-200);
+  --brand-accent: var(--brand-lime-400); /* #d4fb20 — buttons */
+  --brand-accent-strong: var(
+    --brand-lime-500
+  ); /* #cbfc01 — hero circle, logo mark */
+  --brand-accent-hover: var(--brand-lime-300);
+  --brand-accent-wash: var(--brand-lime-100);
+  --brand-on-primary: #ffffff;
+  --brand-on-accent: var(--brand-neutral-950);
+  --brand-surface: #ffffff;
+  --brand-surface-muted: var(--brand-neutral-50);
+  --brand-section: #fafafa;
+  --brand-chip: #f6f6f6;
+  --brand-card: #ffffff;
+  --brand-border: var(--brand-neutral-200);
+  --brand-border-soft: var(--brand-neutral-100);
+  --brand-foreground: var(--brand-neutral-950);
+  /* #4f4f4f: the design's own secondary text colour, used on card meta and section
+     descriptions. It sits between neutral-700 and neutral-600 on the published ramp, so
+     it is kept as its own role rather than rounded to a ramp value. */
+  --brand-foreground-soft: #4f4f4f;
+  /* #040819: the near-black the two section intros' headlines use (nodes 11:65 and
+     34:685). Darker than neutral-950 (#242528) and not the pure black the course card
+     titles use, so it keeps its own role. */
+  --brand-foreground-ink: #040819;
+  --brand-muted-foreground: var(--brand-neutral-400);
+  /* #7f30f7: the "Featured Categories" eyebrow. Not part of any published ramp. */
+  --brand-eyebrow: #7f30f7;
+  /* #c1e338: the "View More" pill fill. Distinct from lime-400 (#d4fb20), which every
+     other button on the page uses. */
+  --brand-accent-muted: #c1e338;
+
+  /* Shape (inferred — see the note above) */
+  --brand-radius-card: 1rem;
+  --brand-radius-panel: 1.5rem;
+  --brand-radius-pill: 9999px;
+
+  /* Layout — 12-column grid, 120px margins, 40px gutters at 1440px (frame 73:1014),
+     which makes the content column 1440 - 2x120 = 1200px. That width lives on the
+     `container` theme key above (`--container-content`), which is what `max-w-content`
+     reads. */
+  --shadow-brand-card: 0 12px 32px -12px rgba(36, 37, 40, 0.16);
 }
 
 /* ---------------------------------------------------------------------------
@@ -205,4 +454,57 @@
 
 @utility overflow-anchor-none {
   overflow-anchor: none;
+}
+
+/*
+ * The grid the design draws across its brand-coloured surfaces: a 2px white line every
+ * 120px on both axes (the style guide's 12-column grid, frame 73:1014, and the Line 1-26
+ * overlays that sit on top of the Home, Search and CTA frames).
+
+ * The overlay group carries 12% opacity in Figma, and each line is a 2px stroke centred
+ * on a multiple of 120 — hence the -1px origin, which puts the first line over pixels
+ * -1 and 0 and the next over 119 and 120, exactly where the frame draws them.
+ */
+/*
+ * The hero's lime disc: a 320px-thick ring drawn as an inside stroke on a 1149px circle
+ * (node 1:1866, `Ellipse 7`, stroke #cbfc01, strokeAlign INSIDE). The inner hole is
+ * therefore 509px, i.e. 44.3% of the outer radius — which is what the gradient stops
+ * below encode. A radial gradient rather than a `border` so the ring scales with its box
+ * instead of needing a different border width at every breakpoint.
+ *
+ * The closing `transparent 100%` is load-bearing: a gradient's final stop colour would
+ * otherwise carry on to the corners of the box, which paints a lime square with a circular
+ * hole punched in it rather than a ring.
+ */
+@utility brand-ring {
+  background-image: radial-gradient(
+    circle closest-side,
+    transparent 0 44.3%,
+    var(--brand-accent-strong) 44.3% 100%,
+    transparent 100%
+  );
+}
+
+@utility brand-grid {
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      rgb(255 255 255 / 0.12) 0px,
+      rgb(255 255 255 / 0.12) 2px,
+      transparent 2px,
+      transparent 120px
+    ),
+    repeating-linear-gradient(
+      to right,
+      rgb(255 255 255 / 0.12) 0px,
+      rgb(255 255 255 / 0.12) 2px,
+      transparent 2px,
+      transparent 120px
+    );
+  /* A 120px tile rather than `auto`: an auto-sized gradient tile is as tall as the
+     element, so a section whose height is not a multiple of 120 leaves a 1px sliver at
+     its bottom edge that repeats the tile's line. Tiling at exactly 120px keeps the
+     lines where the design draws them and nothing at the edge. */
+  background-size: 120px 120px;
+  background-position: -1px -1px;
 }
