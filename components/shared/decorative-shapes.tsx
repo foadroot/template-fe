@@ -74,6 +74,8 @@ type BandShape = {
   /** Box-relative outline; omitted fills the whole box (then `radius` rounds it). */
   points?: [number, number][];
   radius?: boolean;
+  /** Degrees to spin an elliptical render on its own centre. */
+  rotate?: number;
 };
 
 /** The 188px lime cone over the band's top-right corner (46:61). */
@@ -87,10 +89,22 @@ const coneTopLeft: [number, number][] = [
   [122, 121], [137, 148], [133, 163], [111, 174], [81, 157], [66, 147], [60, 142], [0, 142],
 ];
 
-/** The 330px lime cone over the band's bottom-right corner (34:1221). */
+/**
+ * The 330px lime cone over the band's bottom-right corner (34:1221): a flat top, a pinch at
+ * a third of its height, its widest point at two thirds, then the dark diagonal the render
+ * leaves between its two feet — the boundary below runs up to the merge point and back down
+ * again, which is what keeps that wedge bare.
+ */
 const coneBottomRight: [number, number][] = [
-  [106, 2], [145, 22], [157, 64], [172, 92], [166, 106], [193, 134], [199, 158],
-  [43, 158], [10, 106], [28, 78], [73, 50], [44, 22],
+  [78, 4], [127, 4], [141, 17], [145, 29], [143, 41], [136, 53], [130, 59], [141, 65],
+  [160, 71], [172, 95], [170, 101], [164, 113], [154, 125], [182, 131], [195, 143],
+  [199, 161], [199, 165],
+  [38, 165],
+  [42, 155], [60, 143], [80, 131],
+  [120, 101],
+  [107, 107], [80, 113], [57, 119], [36, 125], [30, 129],
+  [23, 125], [11, 113], [10, 101], [19, 89], [28, 83], [38, 77], [48, 71], [58, 65],
+  [68, 59], [76, 53], [61, 47], [50, 41], [45, 29], [45, 23], [48, 17], [54, 11],
 ];
 
 /** The 342px lime cone at the band's bottom-left corner (46:67). */
@@ -118,7 +132,7 @@ const bandShapes: BandShape[] = [
   {
     node: "34:1221 Cone 330",
     className: "bg-brand-accent",
-    box: { left: 1170, top: 330, width: 210, height: 170 },
+    box: { left: 1170, top: 325, width: 210, height: 165 },
     points: coneBottomRight,
   },
   {
@@ -128,16 +142,26 @@ const bandShapes: BandShape[] = [
     points: coneTopLeft,
   },
   {
+    /* The 175px Image frame is a diagonal lozenge: an ellipse spun until its corners land
+       on the render's upper-left and lower-right extremes (211,36) and (324,155). */
     node: "34:1236 Image 175",
     className: "bg-brand-neutral-50",
-    box: { left: 221, top: 41, width: 96, height: 106 },
+    box: { left: 190, top: 63, width: 153, height: 62 },
     radius: true,
+    rotate: 48,
   },
   {
     node: "46:55 Cone 188",
     className: "bg-brand-neutral-50",
-    box: { left: -92, top: 235, width: 234, height: 160 },
-    points: [[117, 0], [234, 160], [0, 160]],
+    box: { left: 0, top: 240, width: 130, height: 160 },
+    /* Widest at y 354, then the render tapers to a foot at y 394 instead of running on to
+       the base the node box implies. */
+    points: [
+      [24, 3], [31, 6], [41, 12], [50, 30], [59, 42], [69, 54], [78, 66], [88, 78],
+      [97, 90], [106, 96], [113, 114], [112, 120], [108, 126], [101, 132], [89, 138],
+      [73, 144], [49, 150], [25, 154], [0, 154], [0, 78], [2, 72], [4, 60], [7, 48],
+      [10, 36], [13, 24], [16, 12], [17, 6],
+    ],
   },
   {
     node: "46:67 Cone 342",
@@ -165,6 +189,7 @@ const outline = (shape: BandShape): CSSProperties => ({
           .join(", ")})`,
       }
     : { borderRadius: shape.radius ? "50%" : undefined }),
+  ...(shape.rotate ? { transform: `rotate(${shape.rotate}deg)` } : {}),
 });
 
 /** The dot cluster three of the four variants carry. */
