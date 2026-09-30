@@ -1,16 +1,25 @@
+import Image from "next/image";
+
+import { Marquee } from "@/components/motion/marquee";
 import { Container } from "@/components/shared/container";
 import { type LogoStripContent } from "@/features/homepage/types/homepage.types";
 
 /**
- * The partner logo band (`1:1794`): a neutral-50 strip holding one row of muted marks.
+ * The partner logo band (`1:1794`), rebuilt as an infinite ticker.
  *
- * The frame is 1440x202 and its logo row (`1:1708`) is 1132x42, sitting 80px down — so
- * the band's padding is 80 above and below its content. The five marks are 167-170px wide
- * with a uniform 72px between them, which is the row below.
+ * Two sources, deliberately:
  *
- * The marks themselves are vector artwork inside the design file rather than imagery, so
- * each slot reserves the mark's measured box and carries the mark's alt text; the marks'
- * own colour is neutral-400. Dropping in the exported artwork is a `src` change.
+ * - The band itself — its neutral-50 fill, the hairline top and bottom rule, the
+ *   responsive padding and the marks' hover treatment — is bytespace-dointech's sponsor
+ *   strip (`Sponser.tsx`), and so are the five PNGs it renders, copied to
+ *   `public/partners/`. Those assets are 167-170x41-42, i.e. exactly the box the design
+ *   measures for its own row, so the two agree rather than merely approximate each other.
+ * - The scrolling is `components/motion/marquee.tsx`, ported from template-education: a
+ *   CSS transform animation with a seamless -50% loop, edge mask, pause-on-hover and a
+ *   reduced-motion fallback that lays the marks out in a static wrapping row.
+ *
+ * The design's own row is static, so the marquee is the one place this section departs
+ * from the frame; everything measurable about it — band, mark size, mark count — is kept.
  */
 export function LogoStripSection({ content }: { content: LogoStripContent }) {
   if (content.logos.length === 0) {
@@ -18,21 +27,27 @@ export function LogoStripSection({ content }: { content: LogoStripContent }) {
   }
 
   return (
-    <section aria-label="Partners" className="bg-brand-surface-muted py-20">
+    <section
+      aria-label="Trusted Sponsors and Partners"
+      className="w-full border-y border-brand-border/60 bg-brand-surface-muted py-10 md:py-14 lg:py-16"
+    >
       <Container>
-        <ul className="mx-auto flex max-w-[1132px] flex-wrap items-center justify-center gap-x-[72px] gap-y-8">
+        <Marquee speed={38}>
           {content.logos.map((logo) => (
-            <li key={logo.id}>
-              <span
-                role="img"
-                aria-label={logo.alt}
-                className="grid h-[42px] w-[168px] place-items-center rounded-brand-card bg-brand-neutral-100 text-label-xs font-medium tracking-[0.2em] text-brand-muted-foreground uppercase"
-              >
-                Logo
-              </span>
-            </li>
+            <div
+              key={logo.id}
+              className="flex items-center opacity-90 transition-transform duration-200 hover:scale-105 hover:opacity-100"
+            >
+              <Image
+                src={logo.src}
+                alt={logo.alt}
+                width={168}
+                height={41}
+                className="h-7 w-auto object-contain select-none md:h-8 lg:h-9"
+              />
+            </div>
           ))}
-        </ul>
+        </Marquee>
       </Container>
     </section>
   );

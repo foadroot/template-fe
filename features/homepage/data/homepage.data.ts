@@ -48,13 +48,22 @@ export const homepageContent: HomepageContent = {
     ],
   },
 
-  // The marks themselves are vector artwork in the file rather than named brands, so the
-  // row reserves their slots. The band, its height and the mark count are the design's.
+  // The five marks are the exported artwork shipped with bytespace-dointech
+  // (`src/asset/sponser/logo-1..5.png`), copied verbatim to `public/partners/`. Their
+  // intrinsic size — 167-170 by 41-42 — is the row's own measured box in the design, so
+  // the assets and the frame agree.
   logoStrip: {
-    logos: Array.from({ length: 5 }, (_, index) => ({
-      id: `partner-${index + 1}`,
-      alt: `Partner logo ${index + 1}`,
-    })),
+    logos: [
+      { id: "partner-1", alt: "Logoipsum Waves", src: "/partners/logo-1.png" },
+      {
+        id: "partner-2",
+        alt: "Logoipsum Sunburst",
+        src: "/partners/logo-2.png",
+      },
+      { id: "partner-3", alt: "Logoipsum Bolt", src: "/partners/logo-3.png" },
+      { id: "partner-4", alt: "Logoipsum Quad", src: "/partners/logo-4.png" },
+      { id: "partner-5", alt: "Logoipsum Sphere", src: "/partners/logo-5.png" },
+    ],
   },
 
   intro: {

@@ -53,8 +53,11 @@ export type HeroContent = {
 
 /** The partner logos band (`1:1794`). */
 export type LogoStripContent = {
-  /** One entry per logo, so the row renders exactly as many marks as the design has. */
-  logos: { id: string; alt: string }[];
+  /**
+   * One entry per logo, so the row renders exactly as many marks as the design has.
+   * `src` is the exported mark itself — a slot without one renders as an empty box.
+   */
+  logos: { id: string; alt: string; src: string }[];
 };
 
 /** A centred heading-and-paragraph block with no other content (frames `12:101`, `34:684`). */
