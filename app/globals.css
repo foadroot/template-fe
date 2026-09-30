@@ -444,6 +444,61 @@
   }
 }
 
+/* Full-screen mobile nav popup — a circular wipe anchored on the menu toggle's own
+   position in the header (top-right: the container's 24px gutter plus half the 40px
+   toggle = 44px in, and 40px down — the toggle's centre in the resting 80px bar), plus
+   the per-row flow-up each staggered link plays inside it. Plain classes rather than
+   `@utility`, since each pairs a keyframe with a caller-supplied `animationDelay`. */
+@keyframes nav-open {
+  from {
+    clip-path: circle(0% at calc(100% - 44px) 40px);
+  }
+  to {
+    clip-path: circle(150% at calc(100% - 44px) 40px);
+  }
+}
+
+@keyframes nav-close {
+  from {
+    clip-path: circle(150% at calc(100% - 44px) 40px);
+  }
+  to {
+    clip-path: circle(0% at calc(100% - 44px) 40px);
+  }
+}
+
+.mobile-nav-open {
+  animation: nav-open 0.5s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+  pointer-events: auto;
+}
+
+.mobile-nav-close {
+  animation: nav-close 0.4s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+  pointer-events: none;
+}
+
+@keyframes nav-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nav-item {
+  animation: nav-item-in 0.4s cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+
+/* Resets every staggered row to hidden the instant the panel closes, so the next open
+   replays the stagger cleanly instead of rows sitting pre-shown. */
+.nav-items-hidden .nav-item {
+  opacity: 0;
+  animation: none;
+}
+
 @utility scrollbar-none {
   scrollbar-width: none;
   -ms-overflow-style: none;
