@@ -1,14 +1,14 @@
-import Image from "next/image";
 import { Search, Star } from "lucide-react";
+import Image from "next/image";
 
 import { brandButton } from "@/components/shared/brand-button";
 import { Container } from "@/components/shared/container";
 import { DecorativeShapes } from "@/components/shared/decorative-shapes";
 import { ImagePlaceholder } from "@/components/shared/image-placeholder";
 import { buttonVariants } from "@/components/ui/button";
+import { routes } from "@/config/routes";
 import { studentAvatars } from "@/features/homepage/data/homepage-assets";
 import { type HeroContent } from "@/features/homepage/types/homepage.types";
-import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
 
 /**
@@ -165,7 +165,7 @@ export function HeroSection({ content }: { content: HeroContent }) {
                   <span
                     key={src}
                     aria-hidden
-                    className="relative size-[43px] shrink-0 overflow-hidden rounded-full bg-brand-surface-muted first:ml-0 -ml-4"
+                    className="relative size-[43px] shrink-0 overflow-hidden rounded-full first:ml-0 -ml-4"
                   >
                     <Image src={src} alt="" fill sizes="43px" className="object-cover" />
                   </span>

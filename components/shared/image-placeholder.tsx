@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { ImageIcon } from "lucide-react";
+import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 
@@ -71,7 +71,7 @@ export function ImagePlaceholder({
   return (
     <div
       className={cn(
-        "relative w-full overflow-hidden bg-brand-surface-muted",
+        "relative w-full overflow-hidden",
         rounded,
         ratioClass[ratio],
         className,
