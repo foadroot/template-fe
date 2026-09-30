@@ -208,13 +208,29 @@ authority.
 ### 13.3 Homepage — hero done, sections outstanding
 
 - [x] 13.3.1 Hero rebuilt from the design's copy: headline, sub-headline, white pill search plus lime control, lime circle, photograph slot, and the floating UI/UX Design, Learning Progress and Happy Students cards, with the decorative shape treatment.
-- [ ] 13.3.2 `Logo_Partner` strip (frame 1:1708) — partner logos.
-- [ ] 13.3.3 Featured Categories cards (11:21) — six category cards plus a "View More" control.
-- [ ] 13.3.4 The two intro blocks (12:101 "Discover Your Passion, Build Your Skills" and 34:684 "Explore Diverse Learning Paths at Bytespace").
-- [ ] 13.3.5 Course card grids (33:683 and the 1460px 34:1159 block) with the design's card anatomy: lessons, duration, comment count, title, creator, level, price and rating.
-- [ ] 13.3.6 The category tab/filter row (21:33, 21:56, 21:63) and the category row (34:725).
-- [ ] 13.3.7 The stats band (12K Students, 70+ Courses, 16 Creators) and the creator CTA band (34:1161).
-- [ ] 13.3.8 Testimonials (34:1175) — the three named entries with quotes.
+- [x] 13.3.2 `Logo_Partner` strip (frame 1:1708) — partner logos. Measured 202 tall against the
+      frame's 202 (was 174: the `border-y` + `py-14` box model was 12px short and the border
+      is not in the frame). **Deviation:** the built strip is an animated marquee while the
+      frame draws five static logos — flagged to the user, kept as a deliberate departure.
+- [x] 13.3.3 Featured Categories cards (11:21) — six tiles at 167×167 on 40px gutters, plus
+      the three category tab rows (21:33, 21:56, 21:63) as 43px pills at 16/21 gaps.
+- [x] 13.3.4 The two intro blocks (12:101 "Discover Your Passion, Build Your Skills" and
+      34:684 "Explore Diverse Learning Paths at Bytespace") and the intro+tiles span
+      1226-1768 / 2576-3120.
+- [x] 13.3.5 Course card grid (33:683) and the 1460px showcase block (34:1159) with the
+      design's card anatomy, INSIDE 1px stroke → `border` + `p-[15px]`, cover r12 inset
+      13/19, chip row, `line-clamp-1` title (the frame sets `maxLines: 1`), level pill,
+      four-ellipse learner stack on 24px pitch, rating and price. Measured: rows at
+      1768/2192 x 120/533/946 373×384; showcase blocks 3240-3792 and 3864-4460 within 1px.
+- [x] 13.3.6 The category tab/filter row (21:33, 21:56, 21:63) — see 13.3.3.
+- [x] 13.3.7 The stats band (12K Students, 70+ Courses, 16 Creators) inside both showcase
+      blocks and the creator CTA band (34:1161): heading 710×106, paragraph 964×87, lime
+      pill 172×46, band 4580-5068. Measured within 1-2px.
+- [x] 13.3.8 Testimonials (34:1175) — three cards at x 118/533/948, heights 432/436/407,
+      heading bottom-aligned against the 5-line paragraph (gap 43). Section height was 781
+      against the frame's 784 — the three missing pixels were `leading-[28px]` on the
+      paragraph, role and quote; now `leading-[29px]` and the section measures 784.
+      **Footer link column also re-measured at 222.4 (was 256) after the same fix.**
 
 ### 13.4 Remaining frames to build
 
