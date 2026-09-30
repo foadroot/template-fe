@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/motion/reveal";
 import { Container } from "@/components/shared/container";
 import { ImagePlaceholder } from "@/components/shared/image-placeholder";
 import { SectionWash, WashLayer } from "@/components/shared/section-wash";
@@ -48,19 +49,24 @@ export function TestimonialSection({
 
       <Container className="relative">
         <div className="flex flex-col gap-[72px] pt-[74px] pb-[57px]">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:gap-[43px]">
+          <Reveal
+            as="div"
+            className="flex flex-col gap-6 lg:flex-row lg:items-end lg:gap-[43px]"
+          >
             <h2 className="max-w-[577px] font-display text-heading-s font-semibold text-black lg:text-heading-m">
               {content.headline.value}
             </h2>
             <p className="max-w-[580px] text-body-l leading-[29px] text-brand-foreground-soft">
               {content.body.value}
             </p>
-          </div>
+          </Reveal>
 
           <ul className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:items-start lg:gap-[41px]">
-            {content.items.map((item) => (
-              <li
+            {content.items.map((item, index) => (
+              <Reveal
                 key={item.id}
+                as="li"
+                delay={(index % 3) * 110}
                 className="flex flex-col gap-6 rounded-brand-panel bg-brand-card p-6"
               >
                 <div className="size-20 shrink-0">
@@ -85,7 +91,7 @@ export function TestimonialSection({
                 <blockquote className="text-body-l leading-[29px] text-brand-foreground-soft">
                   {item.quote.value}
                 </blockquote>
-              </li>
+              </Reveal>
             ))}
           </ul>
         </div>

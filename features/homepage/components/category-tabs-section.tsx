@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { Reveal } from "@/components/motion/reveal";
 import { Container } from "@/components/shared/container";
 import { routes } from "@/config/routes";
 import { type CategoryTabsContent } from "@/features/homepage/types/homepage.types";
@@ -40,8 +41,12 @@ export function CategoryTabsSection({
       <Container>
         <div className="flex flex-col items-center gap-y-[21px]">
           {content.rows.map((row, rowIndex) => (
-            <ul
+            /* Rows reveal in sequence rather than as one block — 90ms apart, so the
+               three lines cascade down the page instead of landing together. */
+            <Reveal
               key={rowIndex}
+              as="ul"
+              delay={rowIndex * 90}
               className="flex flex-wrap items-center justify-center gap-x-4 gap-y-[21px]"
             >
               {rowIndex === 0 ? (
@@ -68,7 +73,7 @@ export function CategoryTabsSection({
                   </Link>
                 </li>
               ) : null}
-            </ul>
+            </Reveal>
           ))}
         </div>
       </Container>
@@ -86,9 +91,11 @@ function Pill({
   active?: boolean;
 }) {
   const className = cn(
-    "inline-flex h-[43px] items-center rounded-brand-pill px-4 text-label-m font-medium transition-colors",
+    // The pop runs on `transform` and the press on `scale`, so `active:scale-95`
+    // still reads while the pop's own keyframes hold their end frame.
+    "inline-flex h-[43px] items-center rounded-brand-pill px-4 text-label-m font-medium transition-all duration-200 hover:-translate-y-0.5 active:scale-95",
     active
-      ? "bg-brand-accent text-brand-foreground"
+      ? "animate-pop bg-brand-accent text-brand-foreground"
       : "bg-brand-surface-muted text-brand-neutral-700 hover:bg-brand-border-soft",
   );
 

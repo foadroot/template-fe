@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/motion/reveal";
 import { Container } from "@/components/shared/container";
 import { type IntroContent } from "@/features/homepage/types/homepage.types";
 import { cn } from "@/lib/utils";
@@ -25,7 +26,10 @@ export function IntroSection({
   return (
     <section className={cn("pt-[72px]", size === "m" ? "pb-[42px]" : "pb-[68px]")}>
       <Container>
-        <div className="mx-auto flex max-w-[917px] flex-col items-center gap-4 text-center">
+        <Reveal
+          as="div"
+          className="mx-auto flex max-w-[917px] flex-col items-center gap-4 text-center"
+        >
           {/* The two headings measure 588 and 792 in the design; the first box is what
               breaks its heading across two lines at 44px (11:65), and the second is wide
               enough that its 36px heading stays on one (34:685). */}
@@ -42,7 +46,7 @@ export function IntroSection({
           <p className="text-body-l text-brand-muted-foreground">
             {content.body.value}
           </p>
-        </div>
+        </Reveal>
       </Container>
     </section>
   );

@@ -38,16 +38,20 @@ export function CreatorsCategoryPills({
 
             return (
               <li key={category.label.value}>
+                {/* Keyed on the active flag so the chip that just came on remounts
+                    and replays its pop — React would otherwise reconcile this row
+                    in place and the click would land with no visible change. */}
                 <Link
+                  key={String(isActive)}
                   href={creatorsHref(query, {
                     category: category.slug,
                     page: 1,
                   })}
                   aria-current={isActive ? "true" : undefined}
                   className={cn(
-                    "inline-flex shrink-0 cursor-pointer items-center rounded-brand-pill px-5 py-2 text-label-xs font-semibold transition-all duration-200 outline-none select-none focus-visible:ring-3 focus-visible:ring-brand-primary/40 sm:text-label-s",
+                    "inline-flex shrink-0 cursor-pointer items-center rounded-brand-pill px-5 py-2 text-label-xs font-semibold transition-all duration-200 outline-none select-none hover:-translate-y-0.5 active:scale-95 focus-visible:ring-3 focus-visible:ring-brand-primary/40 sm:text-label-s",
                     isActive
-                      ? "bg-brand-accent text-brand-on-accent shadow-xs"
+                      ? "animate-pop bg-brand-accent text-brand-on-accent shadow-xs"
                       : "bg-brand-chip text-brand-neutral-700 hover:bg-brand-neutral-100 hover:text-brand-foreground",
                   )}
                 >

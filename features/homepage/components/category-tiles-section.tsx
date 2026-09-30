@@ -8,6 +8,7 @@ import {
   Smartphone,
 } from "lucide-react";
 
+import { Reveal } from "@/components/motion/reveal";
 import { Container } from "@/components/shared/container";
 import { routes } from "@/config/routes";
 import {
@@ -54,23 +55,30 @@ export function CategoryTilesSection({
     <section aria-label="Browse by category" className="pb-[120px]">
       <Container>
         <ul className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6 lg:gap-10">
-          {content.tiles.map((tile) => {
+          {content.tiles.map((tile, index) => {
             const Icon = icons[tile.icon];
 
             return (
-              <li key={tile.id}>
+              /* Zoom rather than slide: the tiles read as chips surfacing, and the
+                 sweep runs left to right across whichever row the index lands in. */
+              <Reveal
+                key={tile.id}
+                as="li"
+                effect="zoom"
+                delay={(index % 6) * 80}
+              >
                 <Link
                   href={`${routes.publicRoutes.courses.list}?category=${slugify(tile.label.value)}`}
-                  className="flex aspect-square flex-col items-center justify-center gap-3 rounded-brand-panel border border-brand-border bg-brand-card px-3 text-center transition-colors hover:border-brand-accent hover:bg-brand-surface-muted"
+                  className="group flex aspect-square flex-col items-center justify-center gap-3 rounded-brand-panel border border-brand-border bg-brand-card px-3 text-center transition-[translate,border-color,background-color,box-shadow] duration-300 ease-out delay-[0ms,0ms,0ms,80ms] hover:-translate-y-1.5 hover:border-brand-accent hover:bg-brand-surface-muted hover:shadow-[var(--shadow-brand-card)]"
                 >
-                  <span className="grid size-15 place-items-center rounded-full bg-brand-accent">
+                  <span className="grid size-15 place-items-center rounded-full bg-brand-accent transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110">
                     <Icon aria-hidden className="size-6 text-brand-foreground" />
                   </span>
                   <span className="text-heading-xs font-medium text-brand-foreground">
                     {tile.label.value}
                   </span>
                 </Link>
-              </li>
+              </Reveal>
             );
           })}
         </ul>

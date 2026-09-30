@@ -37,7 +37,7 @@ function SortIcon({ className }: { className?: string }) {
 }
 
 const pillClass =
-  "inline-flex h-12 items-center gap-1 rounded-brand-pill border border-brand-border bg-white px-4 text-label-m font-medium text-brand-neutral-700 outline-none transition-colors hover:bg-brand-surface-muted focus-visible:ring-3 focus-visible:ring-brand-primary/40";
+  "inline-flex h-12 items-center gap-1 rounded-brand-pill border border-brand-border bg-white px-4 text-label-m font-medium text-brand-neutral-700 outline-none transition-all duration-200 hover:-translate-y-0.5 active:scale-95 hover:bg-brand-surface-muted focus-visible:ring-3 focus-visible:ring-brand-primary/40";
 
 const activePillClass = "border-brand-primary text-brand-primary";
 
@@ -66,7 +66,10 @@ function MenuPill({
       >
         {summary}
       </summary>
-      <ul className="absolute top-full left-0 z-30 mt-2 w-48 rounded-2xl border border-brand-border bg-white p-2 shadow-[var(--shadow-brand-card)]">
+      {/* `menu-pop` is keyed off `details[open]` in globals.css, so the list drops in
+          from under the pill on every open — the rule stops matching the moment the
+          details closes, which is what makes it replay rather than run once. */}
+      <ul className="menu-pop absolute top-full left-0 z-30 mt-2 w-48 rounded-2xl border border-brand-border bg-white p-2 shadow-[var(--shadow-brand-card)]">
         {children}
       </ul>
     </details>
@@ -153,10 +156,17 @@ export function CoursesToolbar({
 
             return (
               <li key={filter.id}>
+                {/* Remounted when the filter's own state flips, so the pill that just
+                    came on pops the way the category row's does. */}
                 <Link
+                  key={String(isActive)}
                   href={href}
                   aria-current={isActive ? "true" : undefined}
-                  className={cn(pillClass, isActive && activePillClass)}
+                  className={cn(
+                    pillClass,
+                    isActive && "animate-pop",
+                    isActive && activePillClass,
+                  )}
                 >
                   {label}
                 </Link>

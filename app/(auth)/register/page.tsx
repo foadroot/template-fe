@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { SectionErrorBoundary } from "@/components/shared/section-error-boundary";
 import { routes } from "@/config/routes";
 import { AuthScreen, SignUpForm } from "@/features/auth";
 
@@ -23,24 +24,26 @@ export const metadata: Metadata = {
  */
 export default function RegisterPage() {
   return (
-    <AuthScreen
-      introHeading="Sign up and come in"
-      introBody="The registration process is straightforward, uncomplicated, and efficient, allowing users to sign up quickly, easily, and at no cost"
-      eyebrow="Create an Account"
-      title="Welcome to ByteSpace"
-      footer={
-        <p className="flex gap-1 text-[16px] leading-[26px] text-brand-neutral-700">
-          Already have an account?
-          <Link
-            href={routes.publicRoutes.auth.login}
-            className="text-brand-primary hover:underline"
-          >
-            Login
-          </Link>
-        </p>
-      }
-    >
-      <SignUpForm />
-    </AuthScreen>
+    <SectionErrorBoundary name="Sign up screen">
+      <AuthScreen
+        introHeading="Sign up and come in"
+        introBody="The registration process is straightforward, uncomplicated, and efficient, allowing users to sign up quickly, easily, and at no cost"
+        eyebrow="Create an Account"
+        title="Welcome to ByteSpace"
+        footer={
+          <p className="flex gap-1 text-[16px] leading-[26px] text-brand-neutral-700">
+            Already have an account?
+            <Link
+              href={routes.publicRoutes.auth.login}
+              className="text-brand-primary hover:underline"
+            >
+              Login
+            </Link>
+          </p>
+        }
+      >
+        <SignUpForm />
+      </AuthScreen>
+    </SectionErrorBoundary>
   );
 }

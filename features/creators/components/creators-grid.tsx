@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { Reveal } from "@/components/motion/reveal";
 import { Container } from "@/components/shared/container";
 import { CreatorCard } from "@/features/creators/components/creator-card";
 import { CreatorsPagination } from "@/features/creators/components/creators-pagination";
@@ -54,14 +55,18 @@ export function CreatorsGrid({
 
         {selection.creators.length > 0 ? (
           <ul className="grid grid-cols-1 gap-6 sm:gap-7 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-            {selection.creators.map((creator) => (
-              <li key={creator.handle}>
+            {selection.creators.map((creator, index) => (
+              <Reveal
+                key={creator.handle}
+                as="li"
+                delay={(index % 3) * 110}
+              >
                 <CreatorCard creator={creator} />
-              </li>
+              </Reveal>
             ))}
           </ul>
         ) : (
-          <div className="mx-auto max-w-lg rounded-brand-panel border border-dashed border-brand-border-soft bg-brand-surface-muted px-4 py-20 text-center">
+          <div className="animate-enter mx-auto max-w-lg rounded-brand-panel border border-dashed border-brand-border-soft bg-brand-surface-muted px-4 py-20 text-center">
             <h2 className="mb-2 font-display text-heading-xs font-bold text-brand-foreground">
               {content.emptyTitle.value}
             </h2>

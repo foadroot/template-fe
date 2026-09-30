@@ -237,6 +237,16 @@
      `--container-*`, so a stray `--spacing-content` would silently win and lay the public
      site out at that value instead. */
   --container-content: 1248px;
+
+  /* Motion kit — keyframes live at the bottom of this file, next to the reveal and
+     parallax classes that pair with them. Registered as `--animate-*` so every one of
+     them is a real Tailwind utility (`animate-float`, `animate-pop`, …). */
+  --animate-float: float-soft 7s ease-in-out infinite;
+  --animate-float-alt: float-soft-alt 9s ease-in-out infinite;
+  --animate-float-slow: float-soft 12s ease-in-out infinite;
+  --animate-orbit: float-orbit 48s linear infinite;
+  --animate-pop: pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-enter: enter-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 :root {
@@ -511,6 +521,189 @@
 .nav-items-hidden .nav-item {
   opacity: 0;
   animation: none;
+}
+
+/* ===========================================================================
+   Motion kit
+   ===========================================================================
+   Three families, all plain CSS on purpose — no animation library ships with this
+   app, and Tailwind v4's CSS-first config is where this file already keeps its
+   keyframes (nav-open, nav-item-in).
+
+     1. Idle floaters   — `animate-float` / `-alt` / `-slow`, `animate-orbit`
+     2. One-shots       — `animate-pop` (a pill turning active), `animate-enter`
+                          (a grid re-entering after a filter change)
+     3. Scroll reveal   — the `.reveal` class, driven by <Reveal> in
+                          components/motion/reveal.tsx via data-revealed
+     4. Cursor parallax — `.parallax-layer`, fed --parallax-x/y by
+                          components/motion/parallax.tsx
+
+   Every transform below lives on `transform`, which Tailwind v4's own translate /
+   scale / rotate utilities do not use (they emit the individual `translate`, `scale`
+   and `rotate` properties) — so a float can run on an element that is also being
+   nudged by a utility or by the parallax layer without either one winning. */
+
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -14px, 0) rotate(1.25deg);
+  }
+}
+
+/* The counter-phase twin: two ornaments on float-soft and float-alt drift apart
+   instead of moving as one block. */
+@keyframes float-soft-alt {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, 12px, 0) rotate(-1.25deg);
+  }
+}
+
+@keyframes float-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Overshoot on purpose — a control that just became active should read as snapping
+   into place, and 1.06 is the point where that lands without looking rubbery. */
+@keyframes pop-in {
+  0% {
+    transform: scale(0.86);
+  }
+  60% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* The re-enter used when a filter swaps the contents of a grid: `both` keeps the
+   first frame hidden, so a staggered `animation-delay` starts each card off-screen
+   of the fade rather than popping it in early. */
+@keyframes enter-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Scroll reveal. The hidden state is the effect's own transform, the shown state is
+   `none`, and the delay comes from --reveal-delay so a stagger costs one custom
+   property rather than a class per step. Order matters: the [data-revealed] rule has
+   to come after the [data-effect] rules, since they share a specificity.
+
+   The property list is long on purpose. This rule is unlayered, so it beats every
+   Tailwind utility underneath it — including the `transition-colors` / `transition-all`
+   a button or a pill brings with it. Listing the interactive properties after the
+   geometric ones, with their own short duration and no stagger delay, is what keeps a
+   revealed control answering hover in 200ms instead of inheriting the reveal's 700ms
+   and its delay. */
+.reveal {
+  opacity: 0;
+  transition-property:
+    opacity, transform, translate, scale, rotate, background-color, border-color,
+    color, box-shadow, filter;
+  transition-duration: 700ms, 700ms, 700ms, 700ms, 700ms, 200ms, 200ms, 200ms,
+    200ms, 200ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay:
+    var(--reveal-delay, 0ms), var(--reveal-delay, 0ms), var(--reveal-delay, 0ms),
+    var(--reveal-delay, 0ms), var(--reveal-delay, 0ms), 0ms, 0ms, 0ms, 0ms, 0ms;
+}
+
+.reveal[data-effect="up"] {
+  transform: translate3d(0, 32px, 0);
+}
+
+.reveal[data-effect="down"] {
+  transform: translate3d(0, -28px, 0);
+}
+
+.reveal[data-effect="left"] {
+  transform: translate3d(-48px, 0, 0);
+}
+
+.reveal[data-effect="right"] {
+  transform: translate3d(48px, 0, 0);
+}
+
+.reveal[data-effect="zoom"] {
+  transform: scale(0.94);
+}
+
+.reveal[data-effect="fade"] {
+  transform: none;
+}
+
+.reveal[data-revealed="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Cursor parallax. The layer reads a length the mouse sets on any ancestor and
+   multiplies it by its own --depth (a bare number: near shapes sit at ~1.5, far ones
+   at ~0.4), then eases toward it — so the drift trails the pointer instead of
+   tracking it rigidly. `translate` rather than `transform`, which keeps the element's
+   own float animation and Tailwind's positioning utilities out of the fight. */
+.parallax-layer {
+  translate: calc(var(--parallax-x, 0px) * var(--depth, 1))
+    calc(var(--parallax-y, 0px) * var(--depth, 1));
+  transition: translate 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* The toolbar's <details> dropdown. Selecting on `details[open]` rather than on the
+   element itself is what makes it replay: the rule stops matching the moment the
+   details closes, so opening it again starts the animation from the top. */
+details[open] > .menu-pop {
+  transform-origin: top left;
+  animation: enter-up 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Honoured everywhere: reveal targets are shown without waiting for the observer,
+   idle floaters and the parallax drift stand still, and one-shots resolve to their
+   end frame. The scripting block is the no-JS case — without it a reveal target
+   would stay at opacity 0 forever, since nothing would ever set data-revealed. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .parallax-layer {
+    translate: none !important;
+    transition: none !important;
+  }
+  .animate-float,
+  .animate-float-alt,
+  .animate-float-slow,
+  .animate-orbit,
+  .animate-pop,
+  .animate-enter,
+  details[open] > .menu-pop {
+    animation: none !important;
+  }
+}
+
+@media (scripting: none) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @utility scrollbar-none {

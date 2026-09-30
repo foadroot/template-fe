@@ -1,6 +1,9 @@
 import { Search, Star } from "lucide-react";
 import Image from "next/image";
+import type { CSSProperties } from "react";
 
+import { MouseParallax } from "@/components/motion/parallax";
+import { Reveal } from "@/components/motion/reveal";
 import { brandButton } from "@/components/shared/brand-button";
 import { Container } from "@/components/shared/container";
 import { DecorativeShapes } from "@/components/shared/decorative-shapes";
@@ -39,21 +42,34 @@ export function HeroSection({ content }: { content: HeroContent }) {
     <section className="brand-grid relative isolate overflow-hidden bg-brand-primary">
       <DecorativeShapes variant="hero" />
 
-      <Container className="relative flex flex-col items-center pt-[49px]">
-        <h1 className="max-w-[935px] text-center font-display text-heading-s font-semibold text-balance text-brand-on-primary sm:text-heading-m lg:text-heading-l">
-          {content.headline.value}
-        </h1>
+      {/* The hero's own pointer listener: the three stat cards opt into it with
+          `.parallax-layer` and a depth, and DecorativeShapes runs a second one over
+          the ornaments, so the two clusters drift against each other. */}
+      <MouseParallax className="relative" max={12}>
+        <Container className="flex flex-col items-center pt-[49px]">
+          <Reveal
+            as="h1"
+            className="max-w-[935px] text-center font-display text-heading-s font-semibold text-balance text-brand-on-primary sm:text-heading-m lg:text-heading-l"
+          >
+            {content.headline.value}
+          </Reveal>
 
-        {/* 32px below the headline (1:1792 ends at 401, 1:1793 starts at 405) and set in
-            the neutral-100 the frame specifies rather than a white tint. */}
-        <p className="mt-8 max-w-[819px] text-center text-body-l text-brand-neutral-100">
-          {content.subheadline.value}
-        </p>
+          {/* 32px below the headline (1:1792 ends at 401, 1:1793 starts at 405) and set in
+              the neutral-100 the frame specifies rather than a white tint. */}
+          <Reveal
+            as="p"
+            delay={120}
+            className="mt-8 max-w-[819px] text-center text-body-l text-brand-neutral-100"
+          >
+            {content.subheadline.value}
+          </Reveal>
 
         {/* `items-start`, not centered: the frame puts the 46px button on the field's own
             top edge (1:1776 sits at y=462 beside the 52px field), so it hangs 6px short
             at the bottom rather than being even on both sides. */}
-        <form
+        <Reveal
+          as="form"
+          delay={240}
           role="search"
           action={routes.publicRoutes.courses.list}
           className="mt-[60px] flex w-full max-w-[581px] items-start gap-4"
@@ -88,12 +104,17 @@ export function HeroSection({ content }: { content: HeroContent }) {
           >
             {content.searchButtonLabel.value}
           </button>
-        </form>
+        </Reveal>
 
         {/* The media box is the portrait's own 578x541 footprint, clipped to the 512px the
             frame leaves for it. The ring, the portrait and the cards all hang off this box,
             which is why the cards are placed with negative offsets. */}
-        <div className="relative -mt-0.5 aspect-[578/512] w-[82%] max-w-[578px] sm:w-[70%] lg:aspect-auto lg:h-[512px] lg:w-[578px] lg:max-w-none">
+        <Reveal
+          as="div"
+          effect="zoom"
+          delay={320}
+          className="relative -mt-0.5 aspect-[578/512] w-[82%] max-w-[578px] sm:w-[70%] lg:aspect-auto lg:h-[512px] lg:w-[578px] lg:max-w-none"
+        >
           {/* 1149 across, centred, top edge 70px below the portrait's (1:1866). */}
           <div
             aria-hidden
@@ -101,8 +122,9 @@ export function HeroSection({ content }: { content: HeroContent }) {
           />
 
           {/* The artwork's own eight-layer drop shadow, collapsed to the two that read at
-              this size. */}
-          <div className="absolute inset-x-0 top-0 drop-shadow-[0_24px_36px_rgba(0,0,0,0.22)]">
+              this size. A slow bob under it, so the portrait breathes against the ring
+              without the two ever moving together. */}
+          <div className="animate-float-slow absolute inset-x-0 top-0 drop-shadow-[0_24px_36px_rgba(0,0,0,0.22)]">
             <ImagePlaceholder
               src={content.image}
               ratio="578/541"
@@ -113,8 +135,16 @@ export function HeroSection({ content }: { content: HeroContent }) {
             />
           </div>
 
-          {/* 208x70 at x=404 — 27px left of the portrait's left edge, 127px down. */}
-          <div className="absolute top-[24.8%] -left-[27px] hidden w-[208px] rounded-brand-card bg-brand-card p-4 md:block">
+          {/* 208x70 at x=404 — 27px left of the portrait's left edge, 127px down.
+              Each card pairs a `parallax-layer` (a `translate` following the pointer,
+              scaled by its depth) with an idle bob on `transform`; the two properties
+              are independent, so both run on the same element. */}
+          <div
+            className="parallax-layer animate-float absolute top-[24.8%] -left-[27px] hidden w-[208px] rounded-brand-card bg-brand-card p-4 md:block"
+            style={
+              { "--depth": "1.4", animationDelay: "0.4s" } as CSSProperties
+            }
+          >
             <p className="text-label-m font-medium text-brand-foreground">
               {content.categoryCard.title.value}
             </p>
@@ -129,7 +159,12 @@ export function HeroSection({ content }: { content: HeroContent }) {
           </div>
 
           {progress ? (
-            <div className="absolute top-[27.1%] -right-[65px] hidden w-[232px] rounded-brand-card bg-brand-card p-4 md:block">
+            <div
+              className="parallax-layer animate-float-alt absolute top-[27.1%] -right-[65px] hidden w-[232px] rounded-brand-card bg-brand-card p-4 md:block"
+              style={
+                { "--depth": "0.7", animationDelay: "1.2s" } as CSSProperties
+              }
+            >
               <p className="text-label-s font-medium text-brand-foreground">
                 {progress.label.value}
               </p>
@@ -149,7 +184,12 @@ export function HeroSection({ content }: { content: HeroContent }) {
           ) : null}
 
           {students ? (
-            <div className="absolute top-[63.5%] -left-[103px] hidden w-[258px] rounded-brand-card bg-brand-card p-4 md:block">
+            <div
+              className="parallax-layer animate-float absolute top-[63.5%] -left-[103px] hidden w-[258px] rounded-brand-card bg-brand-card p-4 md:block"
+              style={
+                { "--depth": "1", animationDelay: "2s" } as CSSProperties
+              }
+            >
               <p className="text-label-m font-medium text-brand-foreground">
                 {students.label.value}
               </p>
@@ -177,8 +217,9 @@ export function HeroSection({ content }: { content: HeroContent }) {
               </div>
             </div>
           ) : null}
-        </div>
-      </Container>
+        </Reveal>
+        </Container>
+      </MouseParallax>
     </section>
   );
 }

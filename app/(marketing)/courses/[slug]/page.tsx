@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { Container } from "@/components/shared/container";
+import { SectionErrorBoundary } from "@/components/shared/section-error-boundary";
 import { routes } from "@/config/routes";
 import {
   CourseAbout,
@@ -55,23 +56,27 @@ export default async function CourseDetailPage({
 
   return (
     <>
-      <CourseHero content={course.hero} />
+      <SectionErrorBoundary name="Course hero">
+        <CourseHero content={course.hero} />
+      </SectionErrorBoundary>
 
-      <section className="pt-[62.5px] pb-[64.5px]">
-        <Container className="relative">
-          <EnrollCard content={course.enroll} />
+      <SectionErrorBoundary name="About and enrolment">
+        <section className="pt-[62.5px] pb-[64.5px]">
+          <Container className="relative">
+            <EnrollCard content={course.enroll} />
 
-          <CourseTabs
-            tabs={course.tabs}
-            active="about"
-            className="mt-10 lg:mt-0 lg:w-[725px]"
-          />
-          <CourseAbout
-            content={course.about}
-            className="mt-10 lg:w-[725px]"
-          />
-        </Container>
-      </section>
+            <CourseTabs
+              tabs={course.tabs}
+              active="about"
+              className="mt-10 lg:mt-0 lg:w-[725px]"
+            />
+            <CourseAbout
+              content={course.about}
+              className="mt-10 lg:w-[725px]"
+            />
+          </Container>
+        </section>
+      </SectionErrorBoundary>
     </>
   );
 }

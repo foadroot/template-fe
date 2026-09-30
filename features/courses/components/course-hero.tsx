@@ -4,6 +4,7 @@ import { type LucideIcon } from "lucide-react";
 import { Container } from "@/components/shared/container";
 import { ImagePlaceholder } from "@/components/shared/image-placeholder";
 import { cn } from "@/lib/utils";
+import { courseVideoCover } from "@/features/courses/data/course-assets";
 import {
   type CourseFactIcon,
   type CourseHeroContent,
@@ -82,6 +83,7 @@ export function CourseHero({ content }: { content: CourseHeroContent }) {
 
         <div className="relative mt-[59px] ml-[5px] w-full max-w-[720px]">
           <ImagePlaceholder
+            src={courseVideoCover}
             ratio="3/2"
             rounded="rounded-[24px]"
             alt={content.videoAlt}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { SectionErrorBoundary } from "@/components/shared/section-error-boundary";
 import { routes } from "@/config/routes";
 import {
   CREATORS_GRID_ANCHOR,
@@ -42,19 +43,25 @@ export default async function CreatorsPage({
 
   return (
     <>
-      <CreatorsHero content={creatorsContent.hero} query={query} />
+      <SectionErrorBoundary name="Search hero">
+        <CreatorsHero content={creatorsContent.hero} query={query} />
+      </SectionErrorBoundary>
 
       {/* The hero's control and the page row both scroll back to this point, which is
           why it sits between the band and the chip row rather than on the grid itself.
           The scroll margin keeps the sticky header from landing on top of it. */}
       <div id={CREATORS_GRID_ANCHOR} className="scroll-mt-24 lg:scroll-mt-32" />
 
-      <CreatorsCategoryPills content={creatorsContent} query={query} />
-      <CreatorsGrid
-        content={creatorsContent}
-        query={query}
-        selection={selection}
-      />
+      <SectionErrorBoundary name="Category pills">
+        <CreatorsCategoryPills content={creatorsContent} query={query} />
+      </SectionErrorBoundary>
+      <SectionErrorBoundary name="Creator grid">
+        <CreatorsGrid
+          content={creatorsContent}
+          query={query}
+          selection={selection}
+        />
+      </SectionErrorBoundary>
     </>
   );
 }

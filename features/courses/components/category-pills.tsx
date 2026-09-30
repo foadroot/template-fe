@@ -6,6 +6,7 @@ import {
   type CategoryPillsContent,
   type CoursesQuery,
 } from "@/features/courses/types/courses.types";
+import { cn } from "@/lib/utils";
 
 /**
  * The `Tab_Categories` row (frame 55:117, y=512): one line of nine 43px pills filling
@@ -41,14 +42,21 @@ export function CategoryPills({
 
             return (
               <li key={option.value}>
+                {/* The key is the active flag, not the option: this row is a set of
+                    links that re-render on navigation rather than remount, so without
+                    it the pill that just turned active would sit there statically.
+                    Keying on the flag swaps the element the moment the query changes,
+                    which is what replays `animate-pop` on the pill that won. */}
                 <Link
+                  key={String(isActive)}
                   href={coursesHref(query, { category: slug, page: 1 })}
                   aria-current={isActive ? "true" : undefined}
-                  className={
+                  className={cn(
+                    "inline-flex h-[43px] items-center rounded-brand-pill px-4 text-label-m font-medium outline-none transition-all duration-200 hover:-translate-y-0.5 active:scale-95 focus-visible:ring-3 focus-visible:ring-brand-primary/40",
                     isActive
-                      ? "inline-flex h-[43px] items-center rounded-brand-pill bg-brand-accent px-4 text-label-m font-medium text-brand-neutral-950 outline-none focus-visible:ring-3 focus-visible:ring-brand-primary/40"
-                      : "inline-flex h-[43px] items-center rounded-brand-pill bg-brand-neutral-50 px-4 text-label-m font-medium text-brand-neutral-700 transition-colors outline-none hover:bg-brand-neutral-100 focus-visible:ring-3 focus-visible:ring-brand-primary/40"
-                  }
+                      ? "animate-pop bg-brand-accent text-brand-neutral-950"
+                      : "bg-brand-neutral-50 text-brand-neutral-700 hover:bg-brand-neutral-100",
+                  )}
                 >
                   {option.value}
                 </Link>

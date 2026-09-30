@@ -8,6 +8,7 @@ import {
   type CoursesSelection,
 } from "@/features/courses/types/courses.types";
 import { coursesContent } from "@/features/courses/data/courses.data";
+import { courseCoverImages } from "@/features/courses/data/course-assets";
 
 /** The six titles the frame repeats across its eighteen cards. */
 const courseTitles = [
@@ -58,6 +59,9 @@ const catalogue: CatalogueCourse[] = Array.from(
       href: routes.publicRoutes.courses.detail(slug),
       title: verifiedCopy(title),
       creator: verifiedCopy("by purepearl studio"),
+      // Interleaved on the same index as the titles, so each of the six keeps one
+      // cover wherever it appears — the homepage grid's own pattern.
+      image: courseCoverImages[index % courseCoverImages.length],
       imageAlt: `Cover artwork for the course ${title}`,
       facts: [
         verifiedCopy("17 Lessons"),

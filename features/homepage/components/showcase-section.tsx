@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Check, Star } from "lucide-react";
 
+import { Reveal, type RevealEffect } from "@/components/motion/reveal";
 import { Container } from "@/components/shared/container";
 import { ImagePlaceholder } from "@/components/shared/image-placeholder";
 import { SectionWash, WashLayer } from "@/components/shared/section-wash";
@@ -63,6 +64,10 @@ export function ShowcaseSection({ content }: { content: ShowcaseContent }) {
 
 function ShowcaseBlockRow({ block }: { block: ShowcaseBlock }) {
   const mediaFirst = block.media === "start";
+  // Each half enters from its own edge of the frame, so the pair reads as closing
+  // together rather than one chasing the other across the row.
+  const textEffect = mediaFirst ? "right" : "left";
+  const mediaEffect = mediaFirst ? "left" : "right";
 
   return (
     <div
@@ -73,7 +78,11 @@ function ShowcaseBlockRow({ block }: { block: ShowcaseBlock }) {
           : "lg:grid-cols-[574fr_621fr] lg:gap-[63px] xl:-mr-[58px]",
       )}
     >
-      <div className={cn(mediaFirst ? "lg:order-2" : "lg:order-1")}>
+      <Reveal
+        as="div"
+        effect={textEffect}
+        className={cn(mediaFirst ? "lg:order-2" : "lg:order-1")}
+      >
         <h2
           className="font-display text-heading-s font-semibold text-brand-foreground lg:text-heading-m"
           style={{ maxWidth: block.headlineWidth }}
@@ -124,10 +133,11 @@ function ShowcaseBlockRow({ block }: { block: ShowcaseBlock }) {
             ))}
           </ul>
         ) : null}
-      </div>
+      </Reveal>
 
       <ShowcaseMedia
         block={block}
+        effect={mediaEffect}
         className={cn(mediaFirst ? "lg:order-1" : "lg:order-2")}
       />
     </div>
@@ -141,16 +151,27 @@ function ShowcaseBlockRow({ block }: { block: ShowcaseBlock }) {
  */
 function ShowcaseMedia({
   block,
+  effect = "up",
   className,
 }: {
   block: ShowcaseBlock;
+  effect?: RevealEffect;
   className?: string;
 }) {
   const { mediaBox } = block;
 
+  // Both of this component's branches are revealed rather than the branch being
+  // chosen here: only one of the two is ever displayed, and the hidden one never
+  // intersects, so whichever is showing plays the entrance and the other stays out
+  // of the way. The delay trails the text column by a beat.
   return (
     <>
-      <div className={cn("xl:hidden", className)}>
+      <Reveal
+        as="div"
+        effect={effect}
+        delay={140}
+        className={cn("xl:hidden", className)}
+      >
         <ImagePlaceholder
           src={mediaBox.image.src}
           fit={mediaBox.image.fit}
@@ -159,9 +180,12 @@ function ShowcaseMedia({
           alt={mediaBox.imageAlt}
           sizes="90vw"
         />
-      </div>
+      </Reveal>
 
-      <div
+      <Reveal
+        as="div"
+        effect={effect}
+        delay={140}
         className={cn("relative hidden xl:block", className)}
         style={{ width: mediaBox.width, height: mediaBox.height }}
       >
@@ -200,10 +224,10 @@ function ShowcaseMedia({
           />
         </div>
 
-        {block.overlayCards.map((card) => (
-          <ShowcaseCard key={card.id} card={card} />
+        {block.overlayCards.map((card, index) => (
+          <ShowcaseCard key={card.id} card={card} index={index} />
         ))}
-      </div>
+      </Reveal>
     </>
   );
 }
@@ -216,7 +240,7 @@ const labelClass = (card: OverlayCard) =>
       ? "text-label-m leading-6 font-medium"
       : "text-label-m font-medium";
 
-function ShowcaseCard({ card }: { card: OverlayCard }) {
+function ShowcaseCard({ card, index }: { card: OverlayCard; index: number }) {
   const onBrand = card.tone === "brand";
   const foreground = onBrand ? "text-brand-neutral-50" : "text-brand-foreground";
 
@@ -238,10 +262,18 @@ function ShowcaseCard({ card }: { card: OverlayCard }) {
   return (
     <div
       className={cn(
+        // Once the block has revealed the collage keeps drifting: cards bob on
+        // `transform`, alternating phase so they never move as one slab.
         "absolute rounded-brand-card p-4",
+        index % 2 === 0 ? "animate-float" : "animate-float-alt",
         onBrand ? "bg-brand-primary" : "bg-brand-card",
       )}
-      style={{ left: card.place.x, top: card.place.y, width: card.place.width }}
+      style={{
+        left: card.place.x,
+        top: card.place.y,
+        width: card.place.width,
+        animationDelay: `${index * 0.7}s`,
+      }}
     >
       <p className={cn(labelClass(card), foreground)}>{card.label.value}</p>
       {card.meta ? (

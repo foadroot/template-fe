@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 
 import { AuthComposition } from "@/features/auth/components/auth-composition";
+import { Reveal } from "@/components/motion/reveal";
 import { BrandLogo } from "@/components/shared/brand-logo";
 import { Container } from "@/components/shared/container";
 import { routes } from "@/config/routes";
@@ -29,14 +30,17 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       <header className="relative h-20 lg:h-[120px]">
         <Container className="flex h-full items-center lg:items-start">
           {/* The logo group sits at y=35 on the 120px band, x=122 — the same 2px the
-              marketing nav adds to the content column's x=120 to reach it. */}
-          <Link
-            href={routes.publicRoutes.home}
-            className="rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-white/60 lg:mt-[35px] lg:ml-[2px]"
-          >
-            <BrandLogo className="h-7 lg:h-[35px]" />
-            <span className="sr-only">ByteSpace home</span>
-          </Link>
+              marketing nav adds to the content column's x=120 to reach it. It drops
+              into place with the screen's first paint. */}
+          <Reveal effect="down">
+            <Link
+              href={routes.publicRoutes.home}
+              className="rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-white/60 lg:mt-[35px] lg:ml-[2px]"
+            >
+              <BrandLogo className="h-7 lg:h-[35px]" />
+              <span className="sr-only">ByteSpace home</span>
+            </Link>
+          </Reveal>
         </Container>
       </header>
 

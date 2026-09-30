@@ -2,6 +2,7 @@ import { CheckCircle2 } from "lucide-react";
 
 import { ImagePlaceholder } from "@/components/shared/image-placeholder";
 import { cn } from "@/lib/utils";
+import { courseGalleryImages } from "@/features/courses/data/course-assets";
 import { type CourseAboutContent } from "@/features/courses/types/courses.types";
 
 /** Four 167×125 thumbnails in a row, evenly spread across the 725px panel. */
@@ -40,6 +41,7 @@ export function CourseAbout({
         {gallerySlots.map((slot) => (
           <ImagePlaceholder
             key={slot}
+            src={courseGalleryImages[slot]}
             ratio="4/3"
             rounded="rounded-2xl"
             alt={`${content.galleryHeading.value} ${slot + 1}`}

@@ -1,5 +1,7 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 
+import { MouseParallax } from "@/components/motion/parallax";
 import { cn } from "@/lib/utils";
 
 type Variant = "hero" | "footer" | "splash" | "band";
@@ -11,6 +13,19 @@ type Shape = {
   fill: "accent" | "accent-soft" | "white";
   className: string;
 };
+
+/**
+ * Motion tuning for the ornaments, shared by the PNG stage and the CSS shapes.
+ *
+ * `depths` is the parallax falloff — the same pointer offset applied at four
+ * different multipliers, so the cluster separates into near and far layers instead
+ * of sliding as one flat plate. `floats` alternates the two keyframe directions for
+ * the same reason: two ornaments bobbing in phase read as a single object.
+ */
+const depths = ["1.5", "0.6", "1.1", "0.4"];
+const floats = ["animate-float", "animate-float-alt"] as const;
+/** Seconds between each ornament's bob, so no two peaks line up. */
+const floatDelay = (index: number) => `${(index % 5) * 0.8}s`;
 
 const fillClass: Record<Shape["fill"], string> = {
   accent: "bg-brand-accent",
@@ -128,21 +143,41 @@ const dotCluster: Partial<Record<Variant, string>> = {
  * Renders one ornament stage: a 1440px design-width canvas centred on the section, so
  * the measured offsets hold on any viewport and everything past the section's own box
  * is clipped by its `overflow-hidden`, the way the Figma frame clips it.
+ *
+ * Each ornament sits in two layers: the wrapper carries the cursor parallax (a
+ * `translate` driven by `--depth`), and the image itself carries the idle bob (a
+ * `transform`). Keeping them on separate elements — and on separate CSS properties —
+ * is what lets both run at once without either overwriting the other.
  */
 function OrnamentStage({ items }: { items: Ornament[] }) {
   return (
     <div className="absolute top-0 left-1/2 h-full w-[1440px] -translate-x-1/2">
-      {items.map((item) => (
-        <Image
+      {items.map((item, index) => (
+        <div
           key={`${item.src}-${item.left}-${item.top}`}
-          src={item.src}
-          alt={item.alt}
-          width={item.width}
-          height={item.height ?? item.width}
-          className="absolute max-w-none"
-          style={{ left: item.left, top: item.top }}
-          aria-hidden
-        />
+          className="parallax-layer absolute"
+          style={
+            {
+              left: item.left,
+              top: item.top,
+              width: item.width,
+              "--depth": depths[index % depths.length],
+            } as React.CSSProperties
+          }
+        >
+          <Image
+            src={item.src}
+            alt={item.alt}
+            width={item.width}
+            height={item.height ?? item.width}
+            aria-hidden
+            className={cn(
+              "h-auto w-full max-w-none",
+              floats[index % floats.length],
+            )}
+            style={{ animationDelay: floatDelay(index) }}
+          />
+        </div>
       ))}
     </div>
   );
@@ -167,27 +202,45 @@ export function DecorativeShapes({
         className,
       )}
     >
-      {stage ? <OrnamentStage items={stage} /> : null}
+      {/* The pointer listener lives one level in rather than on the clipped box
+          itself, so the aria-hidden that marks the whole cluster decorative stays on
+          the outer element and nothing about the markup the section hands in changes. */}
+      <MouseParallax className="relative h-full w-full">
+        {stage ? <OrnamentStage items={stage} /> : null}
 
-      {css.map((shape, index) => (
-        <div
-          key={index}
-          className={cn(
-            "absolute",
-            fillClass[shape.fill],
-            kindClass[shape.kind],
-            shape.className,
-          )}
-        />
-      ))}
+        {css.map((shape, index) => (
+          <div
+            key={index}
+            className={cn(
+              "parallax-layer absolute",
+              fillClass[shape.fill],
+              kindClass[shape.kind],
+              floats[index % floats.length],
+              shape.className,
+            )}
+            style={
+              {
+                "--depth": depths[index % depths.length],
+                animationDelay: floatDelay(index),
+              } as CSSProperties
+            }
+          />
+        ))}
 
-      {dots ? (
-        <div className={cn("absolute grid grid-cols-3 gap-1.5 opacity-70", dots)}>
-          {Array.from({ length: 9 }).map((_, index) => (
-            <span key={index} className="size-1.5 rounded-full bg-brand-accent" />
-          ))}
-        </div>
-      ) : null}
+        {dots ? (
+          <div
+            className={cn(
+              "parallax-layer absolute grid grid-cols-3 gap-1.5 opacity-70",
+              dots,
+            )}
+            style={{ "--depth": "0.8" } as CSSProperties}
+          >
+            {Array.from({ length: 9 }).map((_, index) => (
+              <span key={index} className="size-1.5 rounded-full bg-brand-accent" />
+            ))}
+          </div>
+        ) : null}
+      </MouseParallax>
     </div>
   );
 }

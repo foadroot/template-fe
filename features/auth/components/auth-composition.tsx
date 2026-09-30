@@ -2,6 +2,7 @@ import { Star } from "lucide-react";
 import Image from "next/image";
 import type { CSSProperties } from "react";
 
+import { MouseParallax } from "@/components/motion/parallax";
 import { CourseCard, homepageContent } from "@/features/homepage";
 import { studentAvatars } from "@/features/homepage/data/homepage-assets";
 
@@ -40,60 +41,128 @@ import { studentAvatars } from "@/features/homepage/data/homepage-assets";
  * It only renders from `xl` up. The collage is authored against a 1440px stage (the same
  * stage treatment the hero ornaments use) and its right edge sits at x=606; below the
  * two-column breakpoint there is no room for it beside the card.
+ *
+ * Motion matches the hero: the stage is a `MouseParallax` source, every box is a
+ * `.parallax-layer` at its own depth (near pieces track the pointer further), and each
+ * idles on `animate-float` / `animate-float-alt` with its own phase so the collage
+ * breathes instead of bobbing as one block. `pointer-events-none` pairs with `inert`
+ * (decorative content should not take the pointer at all) and keeps the window-level
+ * mousemove that feeds the parallax unblocked over the collage.
  */
 export function AuthComposition() {
   const cards = homepageContent.courseGrid.cards;
 
   return (
-    <div aria-hidden inert className="absolute inset-0 hidden overflow-hidden xl:block">
-      <div className="absolute top-0 left-1/2 h-full w-[1440px] -translate-x-1/2 select-none">
-        <AbsoluteBox left={122} top={394} width={373}>
+    <div
+      aria-hidden
+      inert
+      className="pointer-events-none absolute inset-0 hidden overflow-hidden xl:block"
+    >
+      {/* The stage doubles as the parallax source: every box below is also a
+          `.parallax-layer`, so the collage leans with the pointer (near pieces
+          further than far ones) while each piece idles on its own float. */}
+      <MouseParallax
+        className="absolute top-0 left-1/2 h-full w-[1440px] -translate-x-1/2 select-none"
+        max={14}
+      >
+        <AbsoluteBox
+          left={122}
+          top={394}
+          width={373}
+          depth="1.3"
+          float="animate-float"
+          delay="0.3s"
+        >
           <CourseCard course={cards[1]} />
         </AbsoluteBox>
 
-        <AbsoluteBox left={233} top={305} width={373}>
+        <AbsoluteBox
+          left={233}
+          top={305}
+          width={373}
+          depth="0.9"
+          float="animate-float-alt"
+          delay="1.1s"
+        >
           <CourseCard course={cards[2]} />
         </AbsoluteBox>
 
-        <HappyStudentsCard style={{ left: 348, top: 740 }} />
+        <HappyStudentsCard
+          style={
+            {
+              left: 348,
+              top: 740,
+              "--depth": "1.7",
+              animationDelay: "2s",
+            } as CSSProperties
+          }
+        />
 
         <CollageOrnament
           src="/ornaments/blob-386-white.png"
           left={470.8}
           top={626}
           size={175.81}
+          depth="0.6"
+          float="animate-float-alt"
+          delay="0.6s"
         />
         <CollageOrnament
           src="/ornaments/cone-343-lime.png"
           left={149.5}
           top={319.7}
           size={146.72}
+          depth="1.1"
+          float="animate-float"
+          delay="1.5s"
         />
         <CollageOrnament
           src="/ornaments/cone-189-lime.png"
           left={95}
           top={701.6}
           size={188.93}
+          depth="1.4"
+          float="animate-float-alt"
         />
-      </div>
+      </MouseParallax>
     </div>
   );
 }
 
-/** A fixed-size box on the 1440px collage stage. */
+/** A fixed-size box on the 1440px collage stage, floating and drifting with the pointer. */
 function AbsoluteBox({
   left,
   top,
   width,
+  depth,
+  float,
+  delay = "0s",
   children,
 }: {
   left: number;
   top: number;
   width: number;
+  /** Parallax multiplier: near pieces sit higher than far ones (~0.6–1.7). */
+  depth: string;
+  /** Which idle keyframe it rides — neighbours alternate so they drift apart. */
+  float: string;
+  /** Phase offset, so the collage never bobs as one block. */
+  delay?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className="absolute" style={{ left, top, width }}>
+    <div
+      className={`parallax-layer absolute ${float}`}
+      style={
+        {
+          left,
+          top,
+          width,
+          "--depth": depth,
+          animationDelay: delay,
+        } as CSSProperties
+      }
+    >
       {children}
     </div>
   );
@@ -105,11 +174,17 @@ function CollageOrnament({
   left,
   top,
   size,
+  depth,
+  float,
+  delay = "0s",
 }: {
   src: string;
   left: number;
   top: number;
   size: number;
+  depth: string;
+  float: string;
+  delay?: string;
 }) {
   return (
     <Image
@@ -117,8 +192,17 @@ function CollageOrnament({
       alt=""
       width={Math.round(size)}
       height={Math.round(size)}
-      className="absolute max-w-none"
-      style={{ left, top, width: size, height: size }}
+      className={`parallax-layer absolute max-w-none ${float}`}
+      style={
+        {
+          left,
+          top,
+          width: size,
+          height: size,
+          "--depth": depth,
+          animationDelay: delay,
+        } as CSSProperties
+      }
     />
   );
 }
@@ -132,7 +216,7 @@ function CollageOrnament({
 function HappyStudentsCard({ style }: { style: CSSProperties }) {
   return (
     <div
-      className="absolute w-[258px] rounded-brand-card bg-brand-accent p-4"
+      className="parallax-layer animate-float absolute w-[258px] rounded-brand-card bg-brand-accent p-4"
       style={style}
     >
       <p className="text-[16px] leading-6 font-medium text-brand-neutral-950">

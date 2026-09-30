@@ -1,5 +1,4 @@
-import Link from "next/link";
-
+import { Reveal } from "@/components/motion/reveal";
 import { brandButton } from "@/components/shared/brand-button";
 import { Container } from "@/components/shared/container";
 import { DecorativeShapes } from "@/components/shared/decorative-shapes";
@@ -26,13 +25,25 @@ export function CreatorCtaSection({ content }: { content: CreatorCtaContent }) {
       <Container className="relative">
         <div className="mx-auto flex max-w-[964px] flex-col items-center gap-10 py-[85px] text-center">
           {/* 710 rather than the block's 964: the design's headline node wraps at its own
-              width, which is what breaks it after "a" (34:1171). */}
-          <h2 className="max-w-[710px] font-display text-heading-s font-semibold text-brand-neutral-50 lg:text-heading-m">
+              width, which is what breaks it after "a" (34:1171). Headline, body and
+              control reveal in sequence, 120ms apart. */}
+          <Reveal
+            as="h2"
+            className="max-w-[710px] font-display text-heading-s font-semibold text-brand-neutral-50 lg:text-heading-m"
+          >
             {content.headline.value}
-          </h2>
-          <p className="text-body-l text-brand-neutral-50">{content.body.value}</p>
-          <Link
+          </Reveal>
+          <Reveal
+            as="p"
+            delay={120}
+            className="text-body-l text-brand-neutral-50"
+          >
+            {content.body.value}
+          </Reveal>
+          <Reveal
+            as="a"
             href={content.ctaHref}
+            delay={240}
             className={cn(
               buttonVariants(),
               brandButton.accent,
@@ -40,7 +51,7 @@ export function CreatorCtaSection({ content }: { content: CreatorCtaContent }) {
             )}
           >
             {content.ctaLabel.value}
-          </Link>
+          </Reveal>
         </div>
       </Container>
     </section>

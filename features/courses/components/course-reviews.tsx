@@ -2,6 +2,7 @@ import { Star } from "lucide-react";
 
 import { ImagePlaceholder } from "@/components/shared/image-placeholder";
 import { cn } from "@/lib/utils";
+import { reviewerAvatars } from "@/features/courses/data/course-assets";
 import {
   type CourseRatingSummary,
   type CourseReviewsContent,
@@ -109,13 +110,14 @@ export function CourseReviews({
       </div>
 
       <ul className="flex flex-col gap-6">
-        {content.reviews.map((review) => (
+        {content.reviews.map((review, index) => (
           <li key={review.name.value}>
             <article className="flex flex-col gap-6 rounded-[24px] border border-brand-border p-[39px]">
               <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
                 <div className="flex flex-col gap-6">
                   <div className="flex items-start gap-3">
                     <ImagePlaceholder
+                      src={reviewerAvatars[index % reviewerAvatars.length]}
                       ratio="1/1"
                       rounded="rounded-full"
                       alt={`${review.name.value} avatar`}

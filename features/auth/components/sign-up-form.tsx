@@ -42,7 +42,7 @@ const inputClassName = cn(
  * exactly its label plus 48 — 123px for "Continue", 104px for "Sign In".
  */
 const submitClassName =
-  "h-[46px] cursor-pointer rounded-brand-pill bg-brand-accent px-6 text-[18px] leading-[21.6px] font-medium text-brand-neutral-950 transition-colors hover:bg-brand-accent-strong disabled:opacity-75";
+  "h-[46px] cursor-pointer rounded-brand-pill bg-brand-accent px-6 text-[18px] leading-[21.6px] font-medium text-brand-neutral-950 transition-[background-color,scale] duration-200 hover:bg-brand-accent-strong active:scale-[0.98] disabled:opacity-75";
 
 /**
  * The sign up form: full name, email and password, matching frame 47:362 field for

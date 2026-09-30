@@ -32,7 +32,11 @@ const chipClass =
  */
 export function CourseCard({ course }: { course: CourseCardContent }) {
   return (
-    <article className="group relative flex h-[384px] flex-col rounded-brand-panel border border-brand-border bg-brand-card p-[15px] transition-shadow hover:shadow-[var(--shadow-brand-card)]">
+    /* Tailwind v4 writes a hover lift to the standalone `translate` property, not
+       `transform`, so the list has to name it or the card snaps while its shadow
+       glides. The shadow starts 80ms behind the lift, so the card leads and its
+       weight follows rather than both landing at once. */
+    <article className="group relative flex h-[384px] flex-col rounded-brand-panel border border-brand-border bg-brand-card p-[15px] transition-[translate,box-shadow] duration-300 ease-out delay-[0ms,80ms] hover:-translate-y-1.5 hover:shadow-[var(--shadow-brand-card)]">
       <div className="relative">
         <ImagePlaceholder
           src={course.image}

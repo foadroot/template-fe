@@ -5,6 +5,7 @@ import { type LucideIcon } from "lucide-react";
 import { routes } from "@/config/routes";
 import { ImagePlaceholder } from "@/components/shared/image-placeholder";
 import { cn } from "@/lib/utils";
+import { courseCreatorAvatar } from "@/features/courses/data/course-assets";
 import { type CourseIncludeIcon, type EnrollCardContent } from "@/features/courses/types/courses.types";
 
 const includeIcon: Record<CourseIncludeIcon, LucideIcon> = {
@@ -125,6 +126,7 @@ export function EnrollCard({
         <div className="flex flex-col gap-6">
           <div className="flex items-start gap-3">
             <ImagePlaceholder
+              src={courseCreatorAvatar}
               ratio="1/1"
               rounded="rounded-full"
               alt={`${content.creatorName.value} avatar`}

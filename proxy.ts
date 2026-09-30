@@ -1,13 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-/**
- * Route guard and request pipeline.
- *
- * Today this is a no-op pass-through — no auth is wired yet. When auth lands,
- * plug it in here following the same pattern as pos-frontend's proxy.ts:
- * resolve the session, guard protected routes, forward the access token.
- */
 export default function proxy(req: NextRequest) {
   return NextResponse.next();
 }

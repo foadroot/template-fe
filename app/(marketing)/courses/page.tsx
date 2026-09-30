@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { SectionErrorBoundary } from "@/components/shared/section-error-boundary";
 import { routes } from "@/config/routes";
 import {
   CategoryPills,
@@ -48,19 +49,29 @@ export default async function CoursesPage({
 
   return (
     <>
-      <CoursesSearchHero content={coursesContent.hero} query={query} />
-      <CoursesToolbar
-        content={coursesContent.toolbar}
-        query={query}
-        activeIds={activeIds}
-      />
-      <CategoryPills content={coursesContent.categories} query={query} />
-      <CourseResults content={{ cards: selection.cards }} />
-      <CoursesPagination
-        content={coursesContent.pagination}
-        query={query}
-        pageCount={selection.pageCount}
-      />
+      <SectionErrorBoundary name="Search hero">
+        <CoursesSearchHero content={coursesContent.hero} query={query} />
+      </SectionErrorBoundary>
+      <SectionErrorBoundary name="Filter toolbar">
+        <CoursesToolbar
+          content={coursesContent.toolbar}
+          query={query}
+          activeIds={activeIds}
+        />
+      </SectionErrorBoundary>
+      <SectionErrorBoundary name="Category pills">
+        <CategoryPills content={coursesContent.categories} query={query} />
+      </SectionErrorBoundary>
+      <SectionErrorBoundary name="Results">
+        <CourseResults content={{ cards: selection.cards }} query={query} />
+      </SectionErrorBoundary>
+      <SectionErrorBoundary name="Pagination">
+        <CoursesPagination
+          content={coursesContent.pagination}
+          query={query}
+          pageCount={selection.pageCount}
+        />
+      </SectionErrorBoundary>
     </>
   );
 }

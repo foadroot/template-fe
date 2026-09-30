@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { SectionErrorBoundary } from "@/components/shared/section-error-boundary";
 import { routes } from "@/config/routes";
-import {
-  AuthScreen,
-  AuthSocialButtons,
-  LogInForm,
-} from "@/features/auth";
+import { AuthScreen, AuthSocialButtons, LogInForm } from "@/features/auth";
 
 export const metadata: Metadata = {
   title: "Sign in",
@@ -28,25 +25,27 @@ export const metadata: Metadata = {
  */
 export default function LoginPage() {
   return (
-    <AuthScreen
-      introHeading="Sign in with ease"
-      introBody="Experience a seamless and efficient sign-in process that grants you instant access to a world of knowledge."
-      eyebrow="Sign In"
-      title="Welcome Back"
-      beforeFooter={<AuthSocialButtons />}
-      footer={
-        <p className="flex gap-1 text-[16px] leading-[26px] text-[#888888]">
-          New user?
-          <Link
-            href={routes.publicRoutes.auth.register}
-            className="text-brand-primary hover:underline"
-          >
-            Create an account
-          </Link>
-        </p>
-      }
-    >
-      <LogInForm />
-    </AuthScreen>
+    <SectionErrorBoundary name="Sign in screen">
+      <AuthScreen
+        introHeading="Sign in with ease"
+        introBody="Experience a seamless and efficient sign-in process that grants you instant access to a world of knowledge."
+        eyebrow="Sign In"
+        title="Welcome Back"
+        beforeFooter={<AuthSocialButtons />}
+        footer={
+          <p className="flex gap-1 text-[16px] leading-[26px] text-[#888888]">
+            New user?
+            <Link
+              href={routes.publicRoutes.auth.register}
+              className="text-brand-primary hover:underline"
+            >
+              Create an account
+            </Link>
+          </p>
+        }
+      >
+        <LogInForm />
+      </AuthScreen>
+    </SectionErrorBoundary>
   );
 }

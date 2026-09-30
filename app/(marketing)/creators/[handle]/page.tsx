@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { SectionErrorBoundary } from "@/components/shared/section-error-boundary";
 import { routes } from "@/config/routes";
 import {
   CreatorCourses,
@@ -51,8 +52,12 @@ export default async function CreatorProfilePage({
 
   return (
     <>
-      <CreatorHero content={creator} />
-      <CreatorCourses content={creator} />
+      <SectionErrorBoundary name="Creator hero">
+        <CreatorHero content={creator} />
+      </SectionErrorBoundary>
+      <SectionErrorBoundary name="Creator courses">
+        <CreatorCourses content={creator} />
+      </SectionErrorBoundary>
     </>
   );
 }

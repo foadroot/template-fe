@@ -24,7 +24,7 @@ const inputClassName = cn(
 
 /** The frames' submit pill (49:239): 46px tall, radius 24, 24px side padding. */
 const submitClassName =
-  "h-[46px] cursor-pointer rounded-brand-pill bg-brand-accent px-6 text-[18px] leading-[21.6px] font-medium text-brand-neutral-950 transition-colors hover:bg-brand-accent-strong disabled:opacity-75";
+  "h-[46px] cursor-pointer rounded-brand-pill bg-brand-accent px-6 text-[18px] leading-[21.6px] font-medium text-brand-neutral-950 transition-[background-color,scale] duration-200 hover:bg-brand-accent-strong active:scale-[0.98] disabled:opacity-75";
 
 /**
  * The log in form: email and password, matching frame 49:220 field for field. Validation

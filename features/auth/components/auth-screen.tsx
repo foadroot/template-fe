@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { Reveal } from "@/components/motion/reveal";
 import { cn } from "@/lib/utils";
 
 /**
@@ -45,14 +46,15 @@ export function AuthScreen({
 
   return (
     <div className="grid gap-10 py-8 xl:grid-cols-[477px_579px] xl:gap-[144px] xl:items-start xl:py-0">
-      <div className="flex flex-col gap-4 xl:ml-[2px]">
+      <Reveal effect="left" className="flex flex-col gap-4 xl:ml-[2px]">
         <h1 className="font-display text-heading-xs font-semibold text-brand-neutral-50">
           {introHeading}
         </h1>
         <p className="text-body-l leading-[29px] text-brand-neutral-50">{introBody}</p>
-      </div>
+      </Reveal>
 
-      <div
+      <Reveal
+        effect="right"
         className={cn(
           "mx-auto w-full max-w-[579px] rounded-brand-panel bg-white px-6 py-10 sm:px-10 xl:mx-0 xl:px-[63px] xl:pt-[61px]",
           hasAside ? "xl:pb-[40px]" : "xl:pb-[51px]",
@@ -70,23 +72,31 @@ export function AuthScreen({
                 whole pixel — 18/28.8 renders as 29, 44/52.8 as 53 — so the two are
                 pinned here; left at their computed values the card comes out 1.6px short
                 and every box below it drifts with it. */}
-            <div className="flex flex-col">
+            <Reveal effect="up" delay={200} className="flex flex-col">
               <p className="text-body-l leading-[29px] text-brand-primary">{eyebrow}</p>
               <h2 className="font-display text-heading-m leading-[53px] font-semibold text-brand-neutral-950">
                 {title}
               </h2>
-            </div>
+            </Reveal>
 
             {/* The frame's field stack is right-aligned (`counterAxisAlignItems: MAX`),
                 which is what puts the submit pill under the fields' right edge. */}
-            <div className="flex flex-col items-end gap-6">{children}</div>
+            <Reveal effect="up" delay={320} className="flex flex-col items-end gap-6">
+              {children}
+            </Reveal>
           </div>
 
-          {beforeFooter}
+          {beforeFooter !== undefined && (
+            <Reveal effect="up" delay={440}>
+              {beforeFooter}
+            </Reveal>
+          )}
 
-          <div className="flex justify-center">{footer}</div>
+          <Reveal effect="fade" delay={560} className="flex justify-center">
+            {footer}
+          </Reveal>
         </div>
-      </div>
+      </Reveal>
     </div>
   );
 }
