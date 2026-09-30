@@ -1,8 +1,10 @@
+import Image from "next/image";
 import { Check, Star } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
 import { ImagePlaceholder } from "@/components/shared/image-placeholder";
 import { SectionWash, WashLayer } from "@/components/shared/section-wash";
+import { studentAvatars } from "@/features/homepage/data/homepage-assets";
 import {
   type ShowcaseBlock,
   type ShowcaseContent,
@@ -150,6 +152,8 @@ function ShowcaseMedia({
     <>
       <div className={cn("xl:hidden", className)}>
         <ImagePlaceholder
+          src={mediaBox.image.src}
+          fit={mediaBox.image.fit}
           ratio={mediaBox.image.ratio}
           rounded="rounded-brand-panel"
           alt={mediaBox.imageAlt}
@@ -170,6 +174,8 @@ function ShowcaseMedia({
           }}
         >
           <ImagePlaceholder
+            src={mediaBox.image.src}
+            fit={mediaBox.image.fit}
             ratio={mediaBox.image.ratio}
             rounded="rounded-brand-panel"
             alt={mediaBox.imageAlt}
@@ -186,6 +192,7 @@ function ShowcaseMedia({
           }}
         >
           <ImagePlaceholder
+            src={mediaBox.ornament.src}
             ratio="1/1"
             rounded="rounded-brand-panel"
             alt={mediaBox.ornament.alt}
@@ -285,14 +292,16 @@ function ShowcaseCard({ card }: { card: OverlayCard }) {
 
       {card.avatars ? (
         <div className="mt-2 flex items-center">
-          {Array.from({ length: card.avatars }).map((_, index) => (
+          {studentAvatars.slice(0, card.avatars).map((src) => (
             <span
-              key={index}
+              key={src}
               aria-hidden
-              className="-ml-4 size-[43px] shrink-0 overflow-hidden rounded-full border-2 border-brand-card bg-brand-surface-muted first:ml-0"
-            />
+              className="relative -ml-4 size-[43px] shrink-0 overflow-hidden rounded-full bg-brand-surface-muted first:ml-0"
+            >
+              <Image src={src} alt="" fill sizes="43px" className="object-cover" />
+            </span>
           ))}
-          <span className="-ml-4 grid size-[43px] shrink-0 place-items-center rounded-full border-2 border-brand-card bg-brand-accent text-label-xs font-bold text-brand-foreground">
+          <span className="-ml-4 grid size-[43px] shrink-0 place-items-center rounded-full bg-brand-accent text-label-xs font-bold text-brand-foreground">
             {card.badge?.value}
           </span>
         </div>

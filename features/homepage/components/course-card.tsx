@@ -1,7 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import { SignalHigh, Star } from "lucide-react";
 
 import { ImagePlaceholder } from "@/components/shared/image-placeholder";
+import { learnerAvatars } from "@/features/homepage/data/homepage-assets";
 import { type CourseCardContent } from "@/features/homepage/types/homepage.types";
 import { cn } from "@/lib/utils";
 
@@ -22,16 +24,18 @@ const chipClass =
  * Below the cover everything is measured from `13:249`: a 341x195 cover inset 16, the
  * 13px/19px inset chip row, then 21px down to a group that runs title (24) / creator
  * (19) / 16 / level and learners (32) / 16 / price (24) — 131px, leaving the frame's last
- * 21px below it.
+ * 21px below it. The frame's 1px stroke is INSIDE, so the panel takes `border` plus 15px
+ * of padding to land the content on that 16.
  *
  * The whole card lifts on hover and the title is the link, so the card has one tab stop
  * rather than four.
  */
 export function CourseCard({ course }: { course: CourseCardContent }) {
   return (
-    <article className="group relative flex h-[384px] flex-col rounded-brand-panel border border-brand-border bg-brand-card p-4 transition-shadow hover:shadow-[var(--shadow-brand-card)]">
+    <article className="group relative flex h-[384px] flex-col rounded-brand-panel border border-brand-border bg-brand-card p-[15px] transition-shadow hover:shadow-[var(--shadow-brand-card)]">
       <div className="relative">
         <ImagePlaceholder
+          src={course.image}
           ratio="341/195"
           rounded="rounded-xl"
           alt={course.imageAlt}
@@ -97,15 +101,16 @@ export function CourseCard({ course }: { course: CourseCardContent }) {
           {course.level.value}
         </span>
 
-        {/* Four learner portraits and the count badge, overlapping by 8px (13:265); the
-            photos are not in the repository, so the circles stand in for them and the
-            badge carries the meaning (design.md D7). */}
+        {/* Four learner portraits and the count badge, overlapping by 8px (13:265), in
+            the order the frame gives its four 32px ellipses. */}
         <div aria-hidden className="flex -space-x-2">
-          {Array.from({ length: 4 }).map((_, index) => (
+          {learnerAvatars.map((src) => (
             <span
-              key={index}
-              className="size-8 rounded-full border-2 border-brand-card bg-brand-neutral-200"
-            />
+              key={src}
+              className="relative size-8 overflow-hidden rounded-full bg-brand-neutral-200"
+            >
+              <Image src={src} alt="" fill sizes="2rem" className="object-cover" />
+            </span>
           ))}
           <span className="grid size-8 place-items-center rounded-full bg-brand-accent text-label-xs font-medium text-brand-foreground">
             {course.students.value}

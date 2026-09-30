@@ -45,6 +45,8 @@ export type HeroContent = {
   subheadline: Copy;
   searchPlaceholder: string;
   searchButtonLabel: Copy;
+  /** The cut-out student photograph (node 1:1796, 578x541). */
+  image?: string;
   /** Describes the hero photograph, and the image that will replace it. */
   imageAlt: string;
   categoryCard: HeroCategoryCard;
@@ -85,6 +87,8 @@ export type CourseCardContent = {
   href: string;
   title: Copy;
   creator: Copy;
+  /** The cover photograph (node 13:250, 341x195). */
+  image?: string;
   /** Describes the cover photography, and the image that will replace it. */
   imageAlt: string;
   /** The three chips overlaid on the cover. */
@@ -154,11 +158,18 @@ export type ShowcaseMediaBox = {
     width: number;
     height: number;
     ratio: ImageRatio;
+    /** The photograph itself; block 1 shares the hero's cut-out, block 2 its own. */
+    src?: string;
+    /** Figma's second block stretches its photo (node 34:1011 is `STRETCH`). */
+    fit?: "cover" | "fill";
   };
   /** Describes the photograph, and the image that will replace it. */
   imageAlt: string;
-  /** The 215x215 artwork the design masks into a silhouette (nodes 34:981, 34:1006). */
-  ornament: { x: number; y: number; size: number; alt: string };
+  /**
+   * The 215x215 artwork the design masks into a silhouette (nodes 34:981, 34:1006) —
+   * both lime, off the same two renders the hero and the CTA band use.
+   */
+  ornament: { x: number; y: number; size: number; alt: string; src?: string };
 };
 
 /**
@@ -212,6 +223,8 @@ export type TestimonialItem = {
   name: Copy;
   role: Copy;
   quote: Copy;
+  /** The 80px circular portrait (nodes 34:1184, 34:1190, 34:1196). */
+  avatar?: string;
   /** Describes the portrait, and the image that will replace it. */
   avatarAlt: string;
 };

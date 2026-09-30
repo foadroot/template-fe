@@ -1,4 +1,5 @@
 import { routes } from "@/config/routes";
+import { courseCovers } from "@/features/homepage/data/homepage-assets";
 import { type HomepageContent } from "@/features/homepage/types/homepage.types";
 import { verifiedCopy } from "@/lib/content/copy";
 
@@ -21,6 +22,8 @@ export const homepageContent: HomepageContent = {
     ),
     searchPlaceholder: "Course, topic, creator",
     searchButtonLabel: verifiedCopy("Search"),
+    // The cut-out portrait the design places at (431, 512), 578x541 (node 1:1796).
+    image: "/home/hero-illustration.png",
     imageAlt: "A student browsing ByteSpace courses on a laptop",
     categoryCard: {
       id: "uiux",
@@ -121,6 +124,7 @@ export const homepageContent: HomepageContent = {
       href: routes.publicRoutes.courses.detail(`course-${index + 1}`),
       title: verifiedCopy(title),
       creator: verifiedCopy("by purepearl studio"),
+      image: courseCovers[index],
       imageAlt: `Cover artwork for the course ${title}`,
       facts: [
         verifiedCopy("17 Lessons"),
@@ -183,6 +187,8 @@ export const homepageContent: HomepageContent = {
             width: 577,
             height: 540,
             ratio: "577/540",
+            // The same cut-out as the hero: node 34:971 shares imageRef 29a52a24.
+            src: "/home/hero-illustration.png",
           },
           imageAlt: "A student on a course call with the ByteSpace app open",
           ornament: {
@@ -190,6 +196,8 @@ export const homepageContent: HomepageContent = {
             y: 67,
             size: 215,
             alt: "An illustration of ByteSpace course artwork",
+            // Node 34:984 masks the blob render into a flat lime silhouette (34:985).
+            src: "/ornaments/blob-331-lime.png",
           },
         },
         overlayCards: [
@@ -227,6 +235,10 @@ export const homepageContent: HomepageContent = {
             width: 435,
             height: 596,
             ratio: "435/596",
+            src: "/home/showcase-photo.png",
+            // Node 34:1011 stretches rather than covers, so the asset is pre-cropped to
+            // its imageTransform and then fills the box.
+            fit: "fill",
           },
           imageAlt: "A creator reviewing their ByteSpace revenue",
           ornament: {
@@ -234,6 +246,8 @@ export const homepageContent: HomepageContent = {
             y: 114,
             size: 215,
             alt: "An illustration of ByteSpace course artwork",
+            // Node 34:1009 masks the other render into the same lime (34:1010).
+            src: "/ornaments/blob-386-lime.png",
           },
         },
         overlayCards: [
@@ -297,6 +311,7 @@ export const homepageContent: HomepageContent = {
         quote: verifiedCopy(
           '"ByteSpace has transformed my approach to learning. The diverse range of courses and the quality of content provided by creators have exceeded my expectations. The platform truly fosters a sense of community and lifelong learning."',
         ),
+        avatar: "/home/avatar-testimonial-01.png",
         avatarAlt: "Portrait of Sarah M., an enthusiastic learner",
       },
       {
@@ -306,6 +321,7 @@ export const homepageContent: HomepageContent = {
         quote: verifiedCopy(
           '"I\'ve tried several online learning platforms, and ByteSpace stands out for its vibrant community and the variety of courses available. The easy navigation and engaging content make it a go-to platform for continuous skill development."',
         ),
+        avatar: "/home/avatar-testimonial-02.png",
         avatarAlt: "Portrait of James L., a lifelong learner",
       },
       {
@@ -315,6 +331,7 @@ export const homepageContent: HomepageContent = {
         quote: verifiedCopy(
           '"As a creator, ByteSpace has been a game-changer for me. The Course Editor is user-friendly, and the support from the community is incredible. It\'s fulfilling to see my courses making a positive impact on learners globally."',
         ),
+        avatar: "/home/avatar-testimonial-03.png",
         avatarAlt: "Portrait of Alex B., an inspired creator",
       },
     ],

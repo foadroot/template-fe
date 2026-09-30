@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Search, Star } from "lucide-react";
 
 import { brandButton } from "@/components/shared/brand-button";
@@ -5,6 +6,7 @@ import { Container } from "@/components/shared/container";
 import { DecorativeShapes } from "@/components/shared/decorative-shapes";
 import { ImagePlaceholder } from "@/components/shared/image-placeholder";
 import { buttonVariants } from "@/components/ui/button";
+import { studentAvatars } from "@/features/homepage/data/homepage-assets";
 import { type HeroContent } from "@/features/homepage/types/homepage.types";
 import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
@@ -25,6 +27,9 @@ import { cn } from "@/lib/utils";
  * The frame is exactly 1024 tall, so the portrait's last 29px and the whole lower half of
  * the ring are clipped by the section — reproduced here with `overflow-hidden` on the
  * section and a 512px-tall media box.
+ *
+ * The three floating cards are flat white: the frame gives them a background blur and an
+ * inner shadow that is switched off, and no drop shadow at all, so none is drawn here.
  */
 export function HeroSection({ content }: { content: HeroContent }) {
   const progress = content.statCards.find((card) => card.variant === "progress");
@@ -45,10 +50,13 @@ export function HeroSection({ content }: { content: HeroContent }) {
           {content.subheadline.value}
         </p>
 
+        {/* `items-start`, not centered: the frame puts the 46px button on the field's own
+            top edge (1:1776 sits at y=462 beside the 52px field), so it hangs 6px short
+            at the bottom rather than being even on both sides. */}
         <form
           role="search"
           action={routes.publicRoutes.courses.list}
-          className="mt-[60px] flex w-full max-w-[581px] items-center gap-4"
+          className="mt-[60px] flex w-full max-w-[581px] items-start gap-4"
         >
           <label htmlFor="hero-search" className="sr-only">
             Search courses
@@ -96,6 +104,7 @@ export function HeroSection({ content }: { content: HeroContent }) {
               this size. */}
           <div className="absolute inset-x-0 top-0 drop-shadow-[0_24px_36px_rgba(0,0,0,0.22)]">
             <ImagePlaceholder
+              src={content.image}
               ratio="578/541"
               alt={content.imageAlt}
               priority
@@ -105,7 +114,7 @@ export function HeroSection({ content }: { content: HeroContent }) {
           </div>
 
           {/* 208x70 at x=404 — 27px left of the portrait's left edge, 127px down. */}
-          <div className="absolute top-[24.8%] -left-[27px] hidden w-[208px] rounded-brand-card bg-brand-card p-4 shadow-[var(--shadow-brand-card)] md:block">
+          <div className="absolute top-[24.8%] -left-[27px] hidden w-[208px] rounded-brand-card bg-brand-card p-4 md:block">
             <p className="text-label-m font-medium text-brand-foreground">
               {content.categoryCard.title.value}
             </p>
@@ -120,7 +129,7 @@ export function HeroSection({ content }: { content: HeroContent }) {
           </div>
 
           {progress ? (
-            <div className="absolute top-[27.1%] -right-[65px] hidden w-[232px] rounded-brand-card bg-brand-card p-4 shadow-[var(--shadow-brand-card)] md:block">
+            <div className="absolute top-[27.1%] -right-[65px] hidden w-[232px] rounded-brand-card bg-brand-card p-4 md:block">
               <p className="text-label-s font-medium text-brand-foreground">
                 {progress.label.value}
               </p>
@@ -140,7 +149,7 @@ export function HeroSection({ content }: { content: HeroContent }) {
           ) : null}
 
           {students ? (
-            <div className="absolute top-[63.5%] -left-[103px] hidden w-[258px] rounded-brand-card bg-brand-card p-4 shadow-[var(--shadow-brand-card)] md:block">
+            <div className="absolute top-[63.5%] -left-[103px] hidden w-[258px] rounded-brand-card bg-brand-card p-4 md:block">
               <p className="text-label-m font-medium text-brand-foreground">
                 {students.label.value}
               </p>
@@ -152,12 +161,14 @@ export function HeroSection({ content }: { content: HeroContent }) {
                 />
               </p>
               <div className="mt-2 flex items-center">
-                {Array.from({ length: students.avatars ?? 0 }).map((_, index) => (
+                {studentAvatars.slice(0, students.avatars ?? 0).map((src) => (
                   <span
-                    key={index}
+                    key={src}
                     aria-hidden
-                    className="size-[43px] shrink-0 overflow-hidden rounded-full border-2 border-brand-card bg-brand-surface-muted first:ml-0 -ml-4"
-                  />
+                    className="relative size-[43px] shrink-0 overflow-hidden rounded-full bg-brand-surface-muted first:ml-0 -ml-4"
+                  >
+                    <Image src={src} alt="" fill sizes="43px" className="object-cover" />
+                  </span>
                 ))}
                 {/* The row ends on a lime badge rather than another portrait (1:1835). */}
                 <span className="-ml-4 grid size-[43px] shrink-0 place-items-center rounded-full bg-brand-accent text-label-xs font-bold text-brand-foreground">
