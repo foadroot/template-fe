@@ -16,18 +16,18 @@ export const marketingNavLinks: readonly MarketingLink[] = [
 const category = (slug: string) => `${routes.publicRoutes.courses.list}?category=${slug}`;
 
 /**
- * A footer column. `heading` is present only on the columns the design labels: it draws
- * "Browse" over the first column and "Platform" over the last, while the middle column
- * carries the second half of the Browse list with no heading of its own.
+ * A footer column of links.
+ *
+ * The footer mirrors the reference site's footer, which labels none of its columns, so
+ * there is no heading here — the three lists read as plain link groups.
  */
 export type MarketingFooterColumn = {
-  heading?: string;
   links: readonly MarketingLink[];
 };
 
 /**
- * Footer link columns, taken from the design's footer: three columns, with the Browse
- * list spanning the first two.
+ * Footer link columns: three groups of five, matching the reference footer's layout (5/7
+ * split on desktop, two columns then three as the row narrows).
  *
  * Category links filter the course listing. The remaining destinations (About, Contact,
  * Help, legal pages) have no frame in the design yet, so they are declared in
@@ -36,7 +36,6 @@ export type MarketingFooterColumn = {
  */
 export const marketingFooterColumns: readonly MarketingFooterColumn[] = [
   {
-    heading: "Browse",
     links: [
       { label: "Featured Courses", href: routes.publicRoutes.placeholders.featuredCourses },
       { label: "Featured Categories", href: routes.publicRoutes.placeholders.featuredCategories },
@@ -55,7 +54,6 @@ export const marketingFooterColumns: readonly MarketingFooterColumn[] = [
     ],
   },
   {
-    heading: "Platform",
     links: [
       { label: "Become a Creator", href: routes.publicRoutes.placeholders.becomeCreator },
       { label: "Affiliate Program", href: routes.publicRoutes.placeholders.affiliate },

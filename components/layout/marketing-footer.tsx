@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, type FormEvent } from "react";
 import Link from "next/link";
 
 import {
@@ -5,132 +8,139 @@ import {
   marketingLegalLinks,
 } from "@/components/layout/marketing-nav-links";
 import { BrandLogo } from "@/components/shared/brand-logo";
-import { brandButton } from "@/components/shared/brand-button";
 import { Container } from "@/components/shared/container";
-import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
-import { cn } from "@/lib/utils";
 
 /**
- * The public site's footer: white surface, newsletter form, three link columns and a
- * bottom bar, matching the design's Footer frame (34:1256), 1440x525.
+ * The public site's footer, ported element for element from the reference site's
+ * `Footer.tsx` (the bytespace-dointech project): a 5/7 grid whose left column carries the
+ * icon + wordmark lockup, the newsletter copy, an inline pill form with its thank-you
+ * note and the disclaimer, whose right column is three heading-less link lists, and which
+ * closes on a rule-separated legal row.
  *
- * Every offset below is measured from the frame's top edge: content starts at y=71 and
- * is 406 tall, the intro column is 528 wide with gaps of 16/45/24 between its three
- * blocks, the link block is 580 wide at x=740 with 40px column gutters and 24px between a
- * heading and its first link, the hairline rule sits at y=435 with the legal row at y=458,
- * and the frame ends with 48px of bottom padding. All footer type is neutral-950.
+ * The palette is the shared one the two projects draw from, so the reference's
+ * `shuttle-gray-*` and `secondary` read back as our `brand-neutral-*` and `brand-primary`
+ * here. The one thing kept from our own shell is `Container`, so the footer stays on the
+ * same content column as the nav and the sections above it.
  *
- * The newsletter form is presentational for now — there is no backend in this change, so
- * submitting it is prevented and the field is not wired to anything.
+ * The newsletter is still presentational: submitting is prevented, the note is local
+ * state, and nothing is sent anywhere.
  */
 export function MarketingFooter() {
+  const [email, setEmail] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!email.trim()) return;
+    setSubscribed(true);
+    setEmail("");
+    setTimeout(() => setSubscribed(false), 4000);
+  }
+
   return (
-    <footer className="border-t border-brand-border bg-brand-surface">
-      <Container className="pt-[71px] pb-12">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,528px)_minmax(0,580px)] lg:justify-between">
-          <div className="flex flex-col">
-            <div className="flex flex-col gap-4">
-              <Link
-                href={routes.publicRoutes.home}
-                className="flex w-fit rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-brand-primary/40"
+    <footer
+      aria-label="Site Footer"
+      className="w-full border-t border-brand-neutral-200/60 bg-white pt-14 pb-10 sm:pt-16 sm:pb-12 md:pt-20"
+    >
+      <Container>
+        <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-16">
+          <div className="flex flex-col lg:col-span-5">
+            <Link
+              href={routes.publicRoutes.home}
+              className="group inline-flex w-fit items-center gap-2.5 rounded-lg transition-transform duration-200 hover:scale-105 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none"
+            >
+              <BrandLogo
+                markOnly
+                className="h-8 w-8 shrink-0 sm:h-9 sm:w-9"
+                label="ByteSpace"
+              />
+              <span className="font-sans text-2xl font-extrabold tracking-tight text-brand-neutral-950">
+                ByteSpace
+              </span>
+            </Link>
+
+            <p className="mt-4 max-w-sm text-xs leading-relaxed text-brand-neutral-700 sm:text-sm">
+              Stay Up to date with our latest features and releases by joining
+              our newsletter.
+            </p>
+
+            <form
+              onSubmit={handleSubmit}
+              className="mt-5 flex max-w-md items-center gap-2 sm:gap-3"
+            >
+              <label htmlFor="footer-email" className="sr-only">
+                Email address
+              </label>
+              <input
+                id="footer-email"
+                type="email"
+                name="email"
+                autoComplete="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="Enter your email"
+                required
+                className="min-w-0 flex-1 rounded-full border border-brand-neutral-200 bg-white px-5 py-2.5 text-xs text-brand-neutral-950 transition-all placeholder:text-brand-neutral-400 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary focus:outline-none sm:text-sm"
+              />
+
+              <button
+                type="submit"
+                className="inline-flex h-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-brand-accent px-6 text-xs font-bold text-brand-primary shadow-sm transition-all hover:bg-brand-accent-hover hover:shadow-md focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 active:scale-[0.98] sm:px-7 sm:text-sm"
               >
-                <BrandLogo
-                  className="h-[35px]"
-                  wordmarkColor="var(--brand-foreground)"
-                />
-                <span className="sr-only">ByteSpace home</span>
-              </Link>
+                {/* The design's own label for this control is "Search". */}
+                Search
+              </button>
+            </form>
 
-              <p className="text-body-s text-brand-foreground">
-                Stay Up to date with our latest features and releases by joining
-                our newsletter.
+            {subscribed ? (
+              <p className="mt-2 text-xs font-semibold text-brand-primary">
+                ✓ Thank you for subscribing to our newsletter!
               </p>
-            </div>
+            ) : null}
 
-            <div className="mt-[45px] flex max-w-[504px] flex-col gap-6">
-              <form className="flex flex-col gap-3 sm:flex-row sm:items-start">
-                <label htmlFor="footer-email" className="sr-only">
-                  Email address
-                </label>
-                <input
-                  id="footer-email"
-                  type="email"
-                  name="email"
-                  autoComplete="email"
-                  placeholder="Enter your email"
-                  className="h-[52px] w-full rounded-brand-pill border border-brand-border bg-brand-card px-6 text-body-m text-brand-foreground outline-none placeholder:text-brand-foreground focus-visible:border-brand-primary focus-visible:ring-3 focus-visible:ring-brand-primary/20"
-                />
-                <button
-                  type="submit"
-                  className={cn(
-                    buttonVariants(),
-                    brandButton.accent,
-                    "h-[46px] px-6 text-label-l",
-                  )}
-                >
-                  {/* The design's own label for this control is "Search". */}
-                  Search
-                </button>
-              </form>
-
-              <p className="text-body-xs text-brand-foreground">
-                By subscribing, you agree to our Privacy Policy and consent to
-                receive updates from our company.
-              </p>
-            </div>
+            <p className="mt-3.5 max-w-sm text-[11px] leading-normal text-brand-neutral-400 sm:text-xs">
+              By subscribing, you agree to our Privacy Policy and consent to
+              receive updates from our company.
+            </p>
           </div>
 
-          <div className="grid gap-x-10 gap-y-8 sm:grid-cols-3">
-            {marketingFooterColumns.map((column, index) => (
-              <nav
-                key={column.heading ?? index}
-                aria-label={`Footer links ${index + 1}`}
-                /* The middle column carries no heading of its own, so it drops by the
-                   heading's 24px plus the 24px gap to line up with the other two. */
-                className={column.heading ? undefined : "sm:mt-12"}
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-10 lg:col-span-7 lg:gap-12">
+            {marketingFooterColumns.map((group, groupIndex) => (
+              <ul
+                key={groupIndex}
+                className="space-y-3 sm:space-y-3.5"
               >
-                <ul className="flex flex-col gap-4 text-body-s">
-                  {column.heading ? (
-                    <li className="mb-2">
-                      <span className="text-body-m text-brand-foreground">
-                        {column.heading}
-                      </span>
-                    </li>
-                  ) : null}
-                  {column.links.map((link) => (
-                    <li key={link.label}>
-                      <Link
-                        href={link.href}
-                        className="rounded-sm text-body-s text-brand-foreground outline-none hover:text-brand-primary focus-visible:ring-3 focus-visible:ring-brand-primary/40"
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
+                {group.links.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="block text-xs text-brand-neutral-700 transition-colors duration-200 hover:text-brand-primary focus-visible:text-brand-primary focus-visible:outline-none sm:text-sm"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             ))}
           </div>
         </div>
 
-        <div className="mt-14 border-t border-brand-border pt-[22px] lg:mt-[130px]">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-body-xs text-brand-foreground">
-              @ 2023 ByteSpace. All rights reserved.
-            </p>
-            <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 text-body-xs">
-              {marketingLegalLinks.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="rounded-sm text-body-xs text-brand-foreground outline-none hover:text-brand-primary focus-visible:ring-3 focus-visible:ring-brand-primary/40"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-brand-neutral-200/70 pt-6 sm:mt-16 sm:flex-row sm:pt-8 md:mt-20">
+          <p className="text-center text-xs text-brand-neutral-400 sm:text-left">
+            © 2023 ByteSpace. All rights reserved.
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-5 text-xs text-brand-neutral-400 sm:gap-6">
+            {marketingLegalLinks.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="transition-colors duration-200 hover:text-brand-neutral-950"
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
         </div>
       </Container>

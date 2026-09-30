@@ -21,7 +21,7 @@ export function BrandLogo({
   return (
     <span className="inline-flex items-center">
       <svg
-        viewBox="0 0 171 35"
+        viewBox={markOnly ? "0 0 29.0067 31.6437" : "0 0 171 35"}
         role="img"
         aria-label={label}
         className={cn("h-7 w-auto", className)}

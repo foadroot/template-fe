@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ShoppingBag } from "lucide-react";
 
 import { marketingNavLinks } from "@/components/layout/marketing-nav-links";
+import { MarketingNavHeader } from "@/components/layout/marketing-nav-header";
 import { MarketingNavMenu } from "@/components/layout/marketing-nav-menu";
 import { BrandLogo } from "@/components/shared/brand-logo";
 import { Container } from "@/components/shared/container";
@@ -14,17 +15,20 @@ import { routes } from "@/config/routes";
  * Measured off the design's `Header_Frame` (1440x120): 120px tall, the logo group at
  * x=122, the link group centred on x=719, and the account group — Sign In, Join Us and a
  * 24px cart glyph at x=1296, 24px between each — ending on x=1320.
+ *
+ * Scrolling down halves the bar (120px → 60px on desktop, 80px → 40px on mobile) with a
+ * short height transition; scrolling back up restores it — see `MarketingNavHeader`.
  */
 export function MarketingNav() {
   return (
-    <header className="sticky top-0 z-40 bg-brand-primary brand-grid">
-      <Container className="relative flex h-20 items-center justify-between gap-6 lg:h-30">
+    <MarketingNavHeader>
+      <Container className="relative flex h-full items-center justify-between gap-6">
         {/* The frame's logo group is not centred with the other two groups: it sits at
             y=35 (the icon runs 35-66.5, the wordmark ink 50-67) while the link and
             account groups centre on y=60. */}
         <Link
           href={routes.publicRoutes.home}
-          className="rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-white/60 lg:mt-[35px] lg:ml-[2px] lg:self-start"
+          className="rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-white/60 lg:mt-[35px] lg:ml-[2px] lg:self-start lg:group-data-[compact=true]:mt-0 lg:group-data-[compact=true]:self-center"
         >
           <BrandLogo className="h-7 lg:h-[35px]" />
           <span className="sr-only">ByteSpace home</span>
@@ -77,6 +81,6 @@ export function MarketingNav() {
           <MarketingNavMenu />
         </div>
       </Container>
-    </header>
+    </MarketingNavHeader>
   );
 }
