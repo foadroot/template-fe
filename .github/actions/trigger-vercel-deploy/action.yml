@@ -1,0 +1,81 @@
+name: Trigger Vercel deploy
+description: >
+  Push an empty commit authored by the deploy account, so Vercel's Git
+  integration builds the branch without depending on whoever pushed the code.
+
+inputs:
+  branch:
+    description: Branch to push the trigger commit onto.
+    required: true
+  token:
+    description: >
+      GitHub token of the account Vercel builds for (the repo owner's
+      fine-grained PAT with Contents: read and write).
+    required: true
+  force:
+    description: Push a trigger commit even if HEAD is already one.
+    required: false
+    default: "false"
+
+runs:
+  using: composite
+  steps:
+    - name: Push an empty commit as the deploy account
+      shell: bash
+      env:
+        DEPLOY_BRANCH: ${{ inputs.branch }}
+        DEPLOY_TOKEN: ${{ inputs.token }}
+        DEPLOY_FORCE: ${{ inputs.force }}
+      run: |
+        set -euo pipefail
+
+        if [[ -z "${DEPLOY_TOKEN}" ]]; then
+          echo "::error::The DEPLOY_BOT_TOKEN secret is empty — add the deploy account's GitHub token to the repository secrets."
+          exit 1
+        fi
+
+        subject="$(git log -1 --format=%s)"
+        if [[ "${DEPLOY_FORCE}" != "true" && "${subject}" == "chore(deploy):"* ]]; then
+          echo "HEAD already is a deploy trigger (${subject}) — nothing to push."
+          exit 0
+        fi
+
+        # Author the commit as the token's own account: that identity is the one
+        # Vercel treats as "the owner's commit", which is what a push from this
+        # workflow is here to guarantee.
+        login="$(
+          curl -sf \
+            -H "Authorization: Bearer ${DEPLOY_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/user |
+            jq -r '.login // empty'
+        )"
+        if [[ -z "${login}" ]]; then
+          echo "::error::DEPLOY_BOT_TOKEN is not a valid GitHub token (GET /user failed)."
+          exit 1
+        fi
+
+        git config user.name "${login}"
+        git config user.email "${login}@users.noreply.github.com"
+        git remote set-url origin "https://x-access-token:${DEPLOY_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+        git commit --no-verify --allow-empty \
+          -m "chore(deploy): trigger vercel build for ${GITHUB_SHA::7}"
+
+        pushed=""
+        for attempt in 1 2 3; do
+          if git pull --rebase origin "${DEPLOY_BRANCH}" &&
+            git push origin "HEAD:${DEPLOY_BRANCH}"; then
+            pushed=1
+            break
+          fi
+          echo "Push attempt ${attempt} failed, retrying in 5s."
+          sleep 5
+        done
+
+        if [[ -z "${pushed}" ]]; then
+          echo "::error::Could not push the deploy trigger commit to ${DEPLOY_BRANCH} (protected branch, stale fetch, or a token without write access?)."
+          exit 1
+        fi
+
+        echo "Pushed ${login}'s trigger commit to ${DEPLOY_BRANCH}."

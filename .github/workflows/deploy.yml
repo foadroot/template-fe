@@ -1,0 +1,50 @@
+name: Deploy to Vercel
+
+# Vercel's Git integration only builds for the account it is connected to, so a
+# push made by anyone else is not enough to get a deployment. This workflow runs
+# the quality gate and then pushes an empty `chore(deploy):` commit authored by
+# the deploy account, which is what makes Vercel build.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Push a trigger commit even if HEAD already is one.
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+# One production trigger at a time: queued runs rebase onto the branch tip
+# before pushing instead of racing each other to a non-fast-forward rejection.
+concurrency:
+  group: vercel-deploy
+  cancel-in-progress: false
+
+jobs:
+  quality:
+    name: quality
+    uses: ./.github/workflows/quality.yml
+
+  trigger:
+    name: trigger vercel build
+    needs: quality
+    if: github.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the branch tip
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Push the trigger commit
+        uses: ./.github/actions/trigger-vercel-deploy
+        with:
+          branch: ${{ github.ref_name }}
+          token: ${{ secrets.DEPLOY_BOT_TOKEN }}
+          force: ${{ inputs.force || false }}

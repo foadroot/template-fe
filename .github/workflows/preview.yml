@@ -1,0 +1,37 @@
+name: Vercel preview
+
+# Same trick as deploy.yml, but on the pull request's own head branch, which is
+# what makes Vercel cut a preview deployment and comment its URL on the PR.
+# The head commit check in the action stops the loop: the bot's push re-runs
+# this workflow, sees its own `chore(deploy):` commit at HEAD and stops.
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vercel-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  trigger:
+    name: trigger preview build
+    # Fork PRs are skipped: their head branch lives in another repository and
+    # the deploy token cannot push to it.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the pull request branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Push the trigger commit
+        uses: ./.github/actions/trigger-vercel-deploy
+        with:
+          branch: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.DEPLOY_BOT_TOKEN }}
