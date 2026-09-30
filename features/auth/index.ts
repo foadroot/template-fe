@@ -6,7 +6,8 @@
  */
 export { SignUpForm } from "./components/sign-up-form";
 export { LogInForm } from "./components/log-in-form";
-export { AuthFormCard } from "./components/auth-form-card";
+export { AuthScreen } from "./components/auth-screen";
+export { AuthSocialButtons } from "./components/auth-social-buttons";
 export { logInSchema, signUpSchema } from "./schemas/auth.schemas";
 
 export type { LogInValues, SignUpValues } from "./schemas/auth.schemas";

@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { routes } from "@/config/routes";
-import { AuthFormCard, LogInForm } from "@/features/auth";
+import {
+  AuthScreen,
+  AuthSocialButtons,
+  LogInForm,
+} from "@/features/auth";
 
 export const metadata: Metadata = {
   title: "Sign in",
@@ -10,22 +15,33 @@ export const metadata: Metadata = {
   alternates: { canonical: routes.publicRoutes.auth.login },
 };
 
-// PLACEHOLDER copy: the Login frame's own strings have not been read yet (the Figma API
-// rate-limited during this pass). Replace once the frame's text is pulled.
+/**
+ * The sign in screen, mirroring the reference's signin page: the brand panel on the left
+ * and the card (eyebrow, title, form, social row, cross-link) on the right.
+ *
+ * UI only — no session is created on submit.
+ */
 export default function LoginPage() {
   return (
-    <AuthFormCard
-      title="Welcome back"
-      description="Sign in to pick up where you left off."
-      footer={{
-        prompt: "New to ByteSpace?",
-        link: {
-          label: "Join Us",
-          href: routes.publicRoutes.auth.register,
-        },
-      }}
+    <AuthScreen
+      headline="Sign in with ease"
+      subcopy="Experience a seamless and efficient sign-in process that grants you instant access to a world of knowledge."
+      eyebrow="Sign In"
+      title="Welcome Back"
+      footer={
+        <p className="mt-4 text-center text-xs text-brand-neutral-400 sm:mt-5">
+          New user?{" "}
+          <Link
+            href={routes.publicRoutes.auth.register}
+            className="font-semibold text-brand-primary hover:underline"
+          >
+            Create an account
+          </Link>
+        </p>
+      }
     >
       <LogInForm />
-    </AuthFormCard>
+      <AuthSocialButtons />
+    </AuthScreen>
   );
 }

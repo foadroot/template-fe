@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { routes } from "@/config/routes";
-import { AuthFormCard, SignUpForm } from "@/features/auth";
+import { AuthScreen, SignUpForm } from "@/features/auth";
 
 export const metadata: Metadata = {
   title: "Join ByteSpace",
@@ -10,22 +11,39 @@ export const metadata: Metadata = {
   alternates: { canonical: routes.publicRoutes.auth.register },
 };
 
-// PLACEHOLDER copy: the Register frame's own strings have not been read yet (the Figma API
-// rate-limited during this pass). Replace once the frame's text is pulled.
+/**
+ * The sign up screen, mirroring the reference's signup page: the brand panel on the left
+ * and the card (eyebrow, title, form, cross-link) on the right — the same frame as the
+ * sign in screen, only the copy and the fields differ.
+ *
+ * UI only — no account is created on submit.
+ */
 export default function RegisterPage() {
   return (
-    <AuthFormCard
-      title="Join ByteSpace"
-      description="Create an account to enrol in courses and keep your progress in one place."
-      footer={{
-        prompt: "Already have an account?",
-        link: {
-          label: "Sign In",
-          href: routes.publicRoutes.auth.login,
-        },
-      }}
+    <AuthScreen
+      headline="Sign up and come in"
+      subcopy="The registration process is straightforward, uncomplicated, and efficient, allowing users to sign up quickly, easily, and at no cost."
+      eyebrow="Create an Account"
+      title={
+        <>
+          Welcome to
+          <br />
+          ByteSpace
+        </>
+      }
+      footer={
+        <p className="mt-4 text-center text-xs text-brand-neutral-400 sm:mt-5">
+          Already have an account?{" "}
+          <Link
+            href={routes.publicRoutes.auth.login}
+            className="font-semibold text-brand-primary hover:underline"
+          >
+            Log in
+          </Link>
+        </p>
+      }
     >
       <SignUpForm />
-    </AuthFormCard>
+    </AuthScreen>
   );
 }

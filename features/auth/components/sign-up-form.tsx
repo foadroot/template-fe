@@ -1,12 +1,12 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { brandButton } from "@/components/shared/brand-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { FormField } from "@/features/auth/components/form-field";
 import {
   signUpSchema,
@@ -15,26 +15,28 @@ import {
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 
-const inputClassName = "h-11 rounded-brand-card border-brand-border";
+/** The reference's field chrome: bordered white input, rounded-xl, compact caption type. */
+const inputClassName =
+  "h-auto rounded-xl border-brand-neutral-200 bg-white px-3.5 py-2 text-xs text-brand-neutral-950 transition-all placeholder:text-brand-neutral-400 focus-visible:border-brand-primary focus-visible:ring-1 focus-visible:ring-brand-primary sm:py-2.5 sm:text-sm";
+
+/** The reference's submit: a small lime pill, right-aligned under the fields. */
+const submitClassName =
+  "h-8 cursor-pointer rounded-full bg-brand-accent px-7 text-xs font-bold text-brand-primary shadow-sm transition-all hover:bg-brand-accent-strong hover:shadow-md disabled:opacity-75 sm:text-sm";
 
 /**
- * The sign up form. Validation is real; submission is not — there is no session and no
- * backend call in this change, and the confirmation says so rather than pretending.
+ * The sign up form: full name, email and password, matching the reference screen field
+ * for field. Validation is real and runs in the browser; submission is not — there is no
+ * backend here, and the confirmation says so rather than implying an account exists.
  */
 export function SignUpForm() {
+  const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<SignUpValues>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: {
-      fullName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      terms: false,
-    },
+    defaultValues: { fullName: "", email: "", password: "" },
   });
 
   function onSubmit(values: SignUpValues) {
@@ -47,16 +49,18 @@ export function SignUpForm() {
     <form
       onSubmit={handleSubmit(onSubmit)}
       noValidate
-      className="flex flex-col gap-4"
+      className="space-y-3 sm:space-y-3.5"
     >
       <FormField
         id="fullName"
-        label="Full name"
+        label="Full Name"
         error={errors.fullName?.message}
       >
         <Input
           id="fullName"
+          type="text"
           autoComplete="name"
+          placeholder="Jamie Davis"
           className={inputClassName}
           aria-invalid={errors.fullName ? true : undefined}
           aria-describedby={errors.fullName ? "fullName-error" : undefined}
@@ -69,6 +73,7 @@ export function SignUpForm() {
           id="email"
           type="email"
           autoComplete="email"
+          placeholder="designer@example.com"
           className={inputClassName}
           aria-invalid={errors.email ? true : undefined}
           aria-describedby={errors.email ? "email-error" : undefined}
@@ -80,71 +85,42 @@ export function SignUpForm() {
         id="password"
         label="Password"
         error={errors.password?.message}
-        hint={errors.password ? undefined : "At least 10 characters."}
       >
-        <Input
-          id="password"
-          type="password"
-          autoComplete="new-password"
-          className={inputClassName}
-          aria-invalid={errors.password ? true : undefined}
-          aria-describedby={
-            errors.password ? "password-error" : "password-hint"
-          }
-          {...register("password")}
-        />
-      </FormField>
-
-      <FormField
-        id="confirmPassword"
-        label="Confirm password"
-        error={errors.confirmPassword?.message}
-      >
-        <Input
-          id="confirmPassword"
-          type="password"
-          autoComplete="new-password"
-          className={inputClassName}
-          aria-invalid={errors.confirmPassword ? true : undefined}
-          aria-describedby={
-            errors.confirmPassword ? "confirmPassword-error" : undefined
-          }
-          {...register("confirmPassword")}
-        />
-      </FormField>
-
-      <div className="flex flex-col gap-2">
-        <Label
-          htmlFor="terms"
-          className="items-start gap-3 leading-snug text-brand-foreground"
-        >
-          <input
-            id="terms"
-            type="checkbox"
-            className="mt-0.5 size-4 shrink-0 accent-brand-accent"
-            aria-invalid={errors.terms ? true : undefined}
-            aria-describedby={errors.terms ? "terms-error" : undefined}
-            {...register("terms")}
+        <div className="relative">
+          <Input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            autoComplete="new-password"
+            placeholder="••••••••"
+            className={cn(inputClassName, "pr-10")}
+            aria-invalid={errors.password ? true : undefined}
+            aria-describedby={errors.password ? "password-error" : undefined}
+            {...register("password")}
           />
-          <span>
-            I agree to be contacted about my laptop and accept the terms of
-            service.
-          </span>
-        </Label>
-        {errors.terms?.message ? (
-          <p id="terms-error" className="text-xs font-medium text-red-600">
-            {errors.terms.message}
-          </p>
-        ) : null}
-      </div>
+          <button
+            type="button"
+            onClick={() => setShowPassword((visible) => !visible)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer p-1 text-brand-neutral-400 transition-colors hover:text-brand-neutral-700"
+          >
+            {showPassword ? (
+              <EyeOff aria-hidden className="size-4" />
+            ) : (
+              <Eye aria-hidden className="size-4" />
+            )}
+          </button>
+        </div>
+      </FormField>
 
-      <Button
-        type="submit"
-        disabled={isSubmitting}
-        className={cn(brandButton.accent, "w-full")}
-      >
-        Join Us
-      </Button>
+      <div className="flex justify-end pt-1">
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className={submitClassName}
+        >
+          {isSubmitting ? "Creating..." : "Continue"}
+        </Button>
+      </div>
     </form>
   );
 }
