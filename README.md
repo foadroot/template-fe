@@ -1,6 +1,6 @@
 # FOAD Starter Template
 
-A Next.js starter template following the folder structure and implementation patterns of pos-frontend.
+A Next.js starter template following the folder structure and implementation patterns of my latest projects.
 
 ## Tech Stack
 
