@@ -68,7 +68,7 @@ export function CourseCard({ course }: { course: CourseCardContent }) {
           <h3 className="line-clamp-1 font-display text-heading-xs font-semibold text-brand-foreground">
             <Link
               href={course.href}
-              className="rounded-sm outline-none after:absolute after:inset-0 focus-visible:ring-3 focus-visible:ring-brand-primary/40"
+              className="rounded-brand-panel outline-none after:absolute after:inset-0 focus-visible:ring-3 focus-visible:ring-brand-primary/40"
             >
               {course.title.value}
             </Link>
@@ -94,10 +94,7 @@ export function CourseCard({ course }: { course: CourseCardContent }) {
             "h-8 gap-1 bg-brand-surface-muted text-brand-neutral-700",
           )}
         >
-          <SignalHigh
-            aria-hidden
-            className="size-5 text-brand-neutral-700"
-          />
+          <SignalHigh aria-hidden className="size-5 text-brand-neutral-700" />
           {course.level.value}
         </span>
 

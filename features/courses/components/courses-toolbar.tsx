@@ -74,7 +74,7 @@ function MenuPill({
 }
 
 const optionClass =
-  "block rounded-xl px-3 py-2 text-label-m font-medium text-brand-neutral-700 outline-none transition-colors hover:bg-brand-surface-muted focus-visible:ring-3 focus-visible:ring-brand-primary/40";
+  "block rounded-brand-pill px-3 py-2 text-label-m font-medium text-brand-neutral-700 outline-none transition-colors hover:bg-brand-surface-muted focus-visible:ring-3 focus-visible:ring-brand-primary/40";
 
 /**
  * The results toolbar (frame 55:117, y=432): three outlined 48px pills on the left of
@@ -131,7 +131,8 @@ export function CoursesToolbar({
                       <li key={level.slug}>
                         <Linkish
                           href={coursesHref(query, {
-                            level: query.level === level.slug ? null : level.slug,
+                            level:
+                              query.level === level.slug ? null : level.slug,
                             page: 1,
                           })}
                           active={query.level === level.slug}

@@ -4,7 +4,10 @@ import { type LucideIcon } from "lucide-react";
 import { Container } from "@/components/shared/container";
 import { ImagePlaceholder } from "@/components/shared/image-placeholder";
 import { cn } from "@/lib/utils";
-import { type CourseFactIcon, type CourseHeroContent } from "@/features/courses/types/courses.types";
+import {
+  type CourseFactIcon,
+  type CourseHeroContent,
+} from "@/features/courses/types/courses.types";
 
 const factIcon: Record<CourseFactIcon, LucideIcon> = {
   level: SignalHigh,
@@ -24,7 +27,7 @@ const factIcon: Record<CourseFactIcon, LucideIcon> = {
  */
 export function CourseHero({ content }: { content: CourseHeroContent }) {
   return (
-    <section className="brand-grid bg-brand-primary pt-[52px] pb-[62px]">
+    <section className="bg-brand-primary brand-grid pt-[52px] pb-[62px]">
       <Container>
         <div className="flex min-w-0 flex-col gap-6 min-[1380px]:flex-row min-[1380px]:items-start min-[1380px]:gap-[392px]">
           <div className="flex min-w-0 flex-col gap-6 min-[1380px]:shrink-0">
@@ -70,7 +73,7 @@ export function CourseHero({ content }: { content: CourseHeroContent }) {
               the same way the header's cart is shown without a cart. */}
           <button
             type="button"
-            className="inline-flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-brand-pill bg-brand-accent px-6 text-label-m font-medium outline-none transition-colors hover:bg-brand-accent-hover focus-visible:ring-3 focus-visible:ring-white/60"
+            className="inline-flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-brand-pill bg-brand-accent px-6 text-label-m font-medium transition-colors outline-none hover:bg-brand-accent-hover focus-visible:ring-3 focus-visible:ring-white/60"
           >
             <Share2 aria-hidden className="size-6 shrink-0" />
             <span>{content.shareLabel.value}</span>
@@ -90,7 +93,7 @@ export function CourseHero({ content }: { content: CourseHeroContent }) {
               own centre; the offset is kept rather than tidied away. */}
           <button
             type="button"
-            className="absolute top-1/2 left-1/2 mt-[16.5px] ml-4 flex size-[104px] -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center rounded-[24px] border border-[#4f4f4f] bg-[#3d3d3d]/25 outline-none transition-colors hover:bg-[#3d3d3d]/40 focus-visible:ring-3 focus-visible:ring-white/60"
+            className="absolute top-1/2 left-1/2 mt-[16.5px] ml-4 flex size-[104px] -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-[#4f4f4f] bg-[#3d3d3d]/25 transition-colors outline-none hover:bg-[#3d3d3d]/40 focus-visible:ring-3 focus-visible:ring-white/60"
           >
             <Play
               aria-hidden

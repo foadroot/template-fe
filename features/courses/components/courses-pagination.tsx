@@ -75,7 +75,7 @@ export function CoursesPagination({
                     href={coursesHref(query, { page })}
                     aria-current={isCurrent ? "page" : undefined}
                     className={cn(
-                      "inline-flex h-7 items-center justify-center rounded-sm font-display text-[20px] leading-7 font-semibold outline-none focus-visible:ring-3 focus-visible:ring-brand-primary/40",
+                      "inline-flex h-7 items-center justify-center rounded-brand-pill font-display text-[20px] leading-7 font-semibold outline-none focus-visible:ring-3 focus-visible:ring-brand-primary/40",
                       isCurrent
                         ? "text-brand-neutral-200"
                         : "text-brand-neutral-950 hover:text-brand-primary",

@@ -48,6 +48,7 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
             type="button"
             variant="destructive"
             size="sm"
+            className="rounded-brand-pill"
             onClick={resetErrorBoundary}
           >
             <RefreshCw data-icon="inline-start" />

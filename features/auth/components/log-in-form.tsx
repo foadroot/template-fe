@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 
 /** The frames' field chrome — see `sign-up-form.tsx` for the measurements. */
 const inputClassName = cn(
-  "h-[52px] rounded-xl border border-brand-neutral-100 bg-white px-6 text-[18px] leading-[28.8px] text-brand-neutral-950 transition-colors",
+  "h-[52px] rounded-brand-pill border border-brand-neutral-100 bg-white px-6 text-[18px] leading-[28.8px] text-brand-neutral-950 transition-colors",
   "placeholder:text-brand-neutral-400 focus-visible:border-brand-primary focus-visible:ring-1 focus-visible:ring-brand-primary",
   "md:text-[18px]",
 );

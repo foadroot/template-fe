@@ -16,17 +16,22 @@ import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 
 /**
- * The frames' field chrome (47:371): a 52px white control, radius 12, a 1px INSIDE
- * stroke in Neutral 100, 24px side padding and Satoshi 400 at 18px. The frame draws no
- * focus state, so the primary focus ring here is an addition — a control with no visible
- * focus indicator cannot be used from the keyboard.
+ * The frames' field chrome (47:371): a 52px white control, a 1px INSIDE stroke in
+ * Neutral 100, 24px side padding and Satoshi 400 at 18px. The frame draws no focus
+ * state, so the primary focus ring here is an addition — a control with no visible focus
+ * indicator cannot be used from the keyboard.
+ *
+ * **Deviation:** the frame gives the control radius 12, but main rounds every search and
+ * newsletter field on the site to the brand pill, and these two were the last rectangles
+ * left. The capsule wins so auth is not the odd field out; everything else is the
+ * frame's own.
  *
  * The `md:` copy of the size is not decoration: `Input`'s own base sets `text-base` and
  * then `md:text-sm`, and a responsive variant out-ranks a plain one in the cascade, so
  * without it the control would drop to 14px on tablet.
  */
 const inputClassName = cn(
-  "h-[52px] rounded-xl border border-brand-neutral-100 bg-white px-6 text-[18px] leading-[28.8px] text-brand-neutral-950 transition-colors",
+  "h-[52px] rounded-brand-pill border border-brand-neutral-100 bg-white px-6 text-[18px] leading-[28.8px] text-brand-neutral-950 transition-colors",
   "placeholder:text-brand-neutral-400 focus-visible:border-brand-primary focus-visible:ring-1 focus-visible:ring-brand-primary",
   "md:text-[18px]",
 );

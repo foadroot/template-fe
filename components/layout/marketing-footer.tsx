@@ -54,7 +54,7 @@ export function MarketingFooter() {
           <div className="flex flex-col">
             <Link
               href={routes.publicRoutes.home}
-              className="group inline-flex w-fit items-center gap-2.5 rounded-lg transition-transform duration-200 hover:scale-105 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none"
+              className="group inline-flex w-fit items-center gap-2.5 rounded-full transition-transform duration-200 hover:scale-105 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none"
             >
               <BrandLogo
                 markOnly
