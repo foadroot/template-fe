@@ -25,10 +25,12 @@ export function MarketingNav() {
       <Container className="relative flex h-full items-center justify-between gap-6">
         {/* The frame's logo group is not centred with the other two groups: it sits at
             y=35 (the icon runs 35-66.5, the wordmark ink 50-67) while the link and
-            account groups centre on y=60. */}
+            account groups centre on y=60. In the 60px compact bar it re-centres to
+            12.5px = (60-35)/2 — kept as margin rather than align-self so it rides the
+            bar's height transition instead of snapping while the bar is still tall. */}
         <Link
           href={routes.publicRoutes.home}
-          className="rounded-full outline-none focus-visible:ring-3 focus-visible:ring-white/60 lg:mt-[35px] lg:ml-[2px] lg:self-start lg:group-data-[compact=true]:mt-0 lg:group-data-[compact=true]:self-center"
+          className="rounded-full transition-[margin-top] duration-300 ease-out outline-none focus-visible:ring-3 focus-visible:ring-white/60 motion-reduce:transition-none lg:mt-[35px] lg:ml-[2px] lg:self-start lg:group-data-[compact=true]:mt-[12.5px]"
         >
           <BrandLogo className="h-7 lg:h-[35px]" />
           <span className="sr-only">ByteSpace home</span>
