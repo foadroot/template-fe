@@ -73,7 +73,7 @@ export function MarketingNav() {
           <button
             type="button"
             aria-label="Cart, 0 items"
-            className="grid size-6 place-items-center text-white outline-none hover:text-brand-accent focus-visible:ring-3 focus-visible:ring-white/60"
+            className="grid size-6 place-items-center rounded-full text-white outline-none hover:text-brand-accent focus-visible:ring-3 focus-visible:ring-white/60"
           >
             <ShoppingBag aria-hidden className="size-5" />
           </button>

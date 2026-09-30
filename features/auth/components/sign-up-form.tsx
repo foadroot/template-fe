@@ -15,9 +15,10 @@ import {
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 
-/** The reference's field chrome: bordered white input, rounded-xl, compact caption type. */
+/** The field chrome: a pill-shaped bordered white input, compact caption type — the same
+    capsule every other field on the site uses (hero search, footer newsletter). */
 const inputClassName =
-  "h-auto rounded-xl border-brand-neutral-200 bg-white px-3.5 py-2 text-xs text-brand-neutral-950 transition-all placeholder:text-brand-neutral-400 focus-visible:border-brand-primary focus-visible:ring-1 focus-visible:ring-brand-primary sm:py-2.5 sm:text-sm";
+  "h-auto rounded-brand-pill border-brand-neutral-200 bg-white px-3.5 py-2 text-xs text-brand-neutral-950 transition-all placeholder:text-brand-neutral-400 focus-visible:border-brand-primary focus-visible:ring-1 focus-visible:ring-brand-primary sm:py-2.5 sm:text-sm";
 
 /** The reference's submit: a small lime pill, right-aligned under the fields. */
 const submitClassName =

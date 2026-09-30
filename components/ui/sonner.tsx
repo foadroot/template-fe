@@ -65,9 +65,9 @@ function PositionedToaster(props: ToasterProps) {
           description: "text-muted-foreground!",
           icon: "mt-0.5! shrink-0!",
           actionButton:
-            "h-7! rounded-md! bg-transparent! px-2! font-semibold! text-[var(--kind-accent)]! hover:bg-foreground/5!",
+            "h-7! rounded-brand-pill! bg-transparent! px-2! font-semibold! text-[var(--kind-accent)]! hover:bg-foreground/5!",
           cancelButton:
-            "h-7! rounded-md! bg-transparent! px-2! font-medium! text-muted-foreground! hover:bg-foreground/5!",
+            "h-7! rounded-brand-pill! bg-transparent! px-2! font-medium! text-muted-foreground! hover:bg-foreground/5!",
           closeButton:
             "border-border! bg-card! text-muted-foreground! hover:text-foreground!",
           ...KIND_VARS,

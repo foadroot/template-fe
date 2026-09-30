@@ -99,7 +99,7 @@ export function MarketingNavMenu() {
           setEverOpened(true);
           setOpen((value) => !value);
         }}
-        className="grid size-10 place-items-center rounded-xl bg-white/10 text-white outline-none hover:bg-white/20 focus-visible:ring-3 focus-visible:ring-white/60"
+        className="grid size-10 place-items-center rounded-full bg-white/10 text-white outline-none hover:bg-white/20 focus-visible:ring-3 focus-visible:ring-white/60"
       >
         {open ? (
           <X aria-hidden className="size-5" />
@@ -142,7 +142,7 @@ export function MarketingNavMenu() {
               type="button"
               onClick={close}
               aria-label="Close menu"
-              className="grid size-10 place-items-center border border-white/25 text-white transition-colors outline-none hover:bg-white/10 focus-visible:ring-3 focus-visible:ring-white/60"
+              className="grid size-10 place-items-center rounded-full border border-white/25 text-white transition-colors outline-none hover:bg-white/10 focus-visible:ring-3 focus-visible:ring-white/60"
             >
               <X aria-hidden className="size-5" />
             </button>
