@@ -83,7 +83,7 @@ export function CreatorCard({ creator }: { creator: CreatorSummary }) {
           <h3 className="line-clamp-1 font-display text-heading-xs font-semibold tracking-tight text-brand-foreground transition-colors group-hover:text-brand-primary">
             <Link
               href={href}
-              className="rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-brand-primary/40"
+              className="rounded-full outline-none focus-visible:ring-3 focus-visible:ring-brand-primary/40"
             >
               {creator.name.value}
             </Link>

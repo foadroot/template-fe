@@ -48,7 +48,7 @@ export function MarketingFooter() {
           <div className="flex flex-col lg:col-span-5">
             <Link
               href={routes.publicRoutes.home}
-              className="group inline-flex w-fit items-center gap-2.5 rounded-lg transition-transform duration-200 hover:scale-105 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none"
+              className="group inline-flex w-fit items-center gap-2.5 rounded-full transition-transform duration-200 hover:scale-105 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none"
             >
               <BrandLogo
                 markOnly
@@ -107,10 +107,7 @@ export function MarketingFooter() {
 
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-10 lg:col-span-7 lg:gap-12">
             {marketingFooterColumns.map((group, groupIndex) => (
-              <ul
-                key={groupIndex}
-                className="space-y-3 sm:space-y-3.5"
-              >
+              <ul key={groupIndex} className="space-y-3 sm:space-y-3.5">
                 {group.links.map((link) => (
                   <li key={link.label}>
                     <Link

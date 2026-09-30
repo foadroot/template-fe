@@ -28,7 +28,7 @@ export function MarketingNav() {
             account groups centre on y=60. */}
         <Link
           href={routes.publicRoutes.home}
-          className="rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-white/60 lg:mt-[35px] lg:ml-[2px] lg:self-start lg:group-data-[compact=true]:mt-0 lg:group-data-[compact=true]:self-center"
+          className="rounded-full outline-none focus-visible:ring-3 focus-visible:ring-white/60 lg:mt-[35px] lg:ml-[2px] lg:self-start lg:group-data-[compact=true]:mt-0 lg:group-data-[compact=true]:self-center"
         >
           <BrandLogo className="h-7 lg:h-[35px]" />
           <span className="sr-only">ByteSpace home</span>
@@ -45,7 +45,7 @@ export function MarketingNav() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="rounded-sm text-label-m text-white/95 outline-none hover:text-brand-accent focus-visible:ring-3 focus-visible:ring-white/60"
+                  className="rounded-full text-label-m text-white/95 outline-none hover:text-brand-accent focus-visible:ring-3 focus-visible:ring-white/60"
                 >
                   {link.label}
                 </Link>
@@ -57,13 +57,13 @@ export function MarketingNav() {
         <div className="flex items-center gap-3 lg:gap-6">
           <Link
             href={routes.publicRoutes.auth.login}
-            className="hidden rounded-sm text-label-m text-white/95 outline-none hover:text-brand-accent focus-visible:ring-3 focus-visible:ring-white/60 lg:block"
+            className="hidden rounded-full text-label-m text-white/95 outline-none hover:text-brand-accent focus-visible:ring-3 focus-visible:ring-white/60 lg:block"
           >
             Sign In
           </Link>
           <Link
             href={routes.publicRoutes.auth.register}
-            className="hidden rounded-sm text-label-m text-white/95 outline-none hover:text-brand-accent focus-visible:ring-3 focus-visible:ring-white/60 lg:block"
+            className="hidden rounded-full text-label-m text-white/95 outline-none hover:text-brand-accent focus-visible:ring-3 focus-visible:ring-white/60 lg:block"
           >
             Join Us
           </Link>

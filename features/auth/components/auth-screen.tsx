@@ -35,7 +35,7 @@ export function AuthScreen({
         <Link
           href={routes.publicRoutes.home}
           aria-label="ByteSpace Home"
-          className="group mb-3 inline-flex items-center rounded-lg transition-transform duration-200 hover:scale-105 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none sm:mb-4"
+          className="group mb-3 inline-flex items-center rounded-full transition-transform duration-200 hover:scale-105 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none sm:mb-4"
         >
           <BrandLogo
             markOnly
@@ -44,7 +44,7 @@ export function AuthScreen({
           />
         </Link>
 
-        <h1 className="font-display text-2xl font-bold leading-tight tracking-tight text-white sm:text-3xl lg:text-[34px]">
+        <h1 className="font-display text-2xl leading-tight font-bold tracking-tight text-white sm:text-3xl lg:text-[34px]">
           {headline}
         </h1>
 
@@ -63,7 +63,7 @@ export function AuthScreen({
             <span className="block text-xs font-semibold text-brand-primary sm:text-sm">
               {eyebrow}
             </span>
-            <h2 className="mt-0.5 text-xl font-bold leading-tight tracking-tight text-brand-neutral-950 sm:text-2xl lg:text-[26px]">
+            <h2 className="mt-0.5 text-xl leading-tight font-bold tracking-tight text-brand-neutral-950 sm:text-2xl lg:text-[26px]">
               {title}
             </h2>
           </div>

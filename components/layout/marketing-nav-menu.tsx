@@ -133,7 +133,7 @@ export function MarketingNavMenu() {
             <Link
               href={routes.publicRoutes.home}
               onClick={close}
-              className="rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-white/60"
+              className="rounded-full outline-none focus-visible:ring-3 focus-visible:ring-white/60"
             >
               <BrandLogo className="h-7" />
               <span className="sr-only">ByteSpace home</span>
