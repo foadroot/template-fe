@@ -29,6 +29,15 @@ const twMerge = extendTailwindMerge({
           ],
         },
       ],
+      // Brand radii, registered in app/globals.css from the design's radius scale.
+      // Without them `cn(buttonVariants(), brandButton.accent)` kept the primitive's
+      // `rounded-sm` alongside `rounded-brand-pill` and the CTAs rendered as rounded
+      // rectangles instead of the design's pills.
+      rounded: [
+        {
+          rounded: ["brand-card", "brand-panel", "brand-pill"],
+        },
+      ],
     },
   },
 });
