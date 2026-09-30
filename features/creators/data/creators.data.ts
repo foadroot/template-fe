@@ -1,6 +1,11 @@
-import { verifiedCopy } from "@/lib/content/copy";
+import { placeholderCopy, verifiedCopy } from "@/lib/content/copy";
 import { coursesContent, readCatalogue } from "@/features/courses";
-import { type CreatorProfileContent } from "@/features/creators/types/creators.types";
+import { readCreatorRecord } from "@/features/creators/data/creators-list.data";
+import { formatCount } from "@/features/creators/lib/format";
+import {
+  type CreatorProfileContent,
+  type CreatorSummary,
+} from "@/features/creators/types/creators.types";
 
 /**
  * The frame's own bio, including its line break after "learn together!" and the word the
@@ -31,14 +36,46 @@ const purePearlStudio: CreatorProfileContent = {
   courses: readCatalogue().slice(0, 6),
 };
 
-const creators: Record<string, CreatorProfileContent> = {
+const designed: Record<string, CreatorProfileContent> = {
   [purePearlStudio.handle]: purePearlStudio,
 };
 
-/** The only creator the design draws; `/creators` stands in for the missing index. */
-export const defaultCreatorHandle = purePearlStudio.handle;
+/**
+ * The index links all twenty roster entries to a profile, but the frame only draws one.
+ * The other nineteen are built from the same roster record on the way out — the tagline
+ * from the role, the bio and counts from the card — so no "View Profile" lead lands on
+ * the branded 404. The frame's own fixture wins when it exists, because it carries this
+ * file's design copy rather than the reference's.
+ */
+function derivedProfile(record: CreatorSummary): CreatorProfileContent {
+  return {
+    handle: record.handle,
+    name: record.name,
+    badge: record.badge,
+    tagline: record.role,
+    bio: record.bio,
+    avatarAlt: record.avatar.alt,
+    stats: [
+      {
+        value: placeholderCopy(String(record.courses)),
+        label: placeholderCopy("Products"),
+      },
+      {
+        value: placeholderCopy(formatCount(record.followers)),
+        label: placeholderCopy("Followers"),
+      },
+    ],
+    followLabel: placeholderCopy("Follow"),
+    coursesToolbar: coursesContent.toolbar,
+    courses: readCatalogue().slice(0, 6),
+  };
+}
 
 /** Looks a creator up by handle, for the dynamic route to render or 404 on. */
 export function creatorProfile(handle: string): CreatorProfileContent | null {
-  return creators[handle] ?? null;
+  const drawn = designed[handle];
+  if (drawn) return drawn;
+
+  const record = readCreatorRecord(handle);
+  return record ? derivedProfile(record) : null;
 }

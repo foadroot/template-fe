@@ -14,7 +14,7 @@ export const routes = {
       reviews: (slug: string) => `/courses/${slug}/reviews`,
     },
     creators: {
-      /** Nav entry point. The design has a Creator Profile frame but no creators index. */
+      /** The discovery list: search, category chips and paging over the roster. */
       list: "/creators",
       profile: (handle: string) => `/creators/${handle}`,
     },

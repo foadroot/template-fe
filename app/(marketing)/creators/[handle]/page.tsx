@@ -32,8 +32,10 @@ export async function generateMetadata({
 /**
  * The Creator Profile route, matching the design's frame (60:1878): the blue identity
  * band and the six-card course grid, with the header and footer from the marketing
- * shell. The frame draws one creator, so any other handle is a miss — it falls through
- * to the branded 404 rather than to an invented profile.
+ * shell. The frame draws one creator, so that fixture is the one carrying the design's
+ * own copy; the other handles the index links to are built from their roster record on
+ * the way out. A handle neither source knows falls through to the branded 404 rather
+ * than to an invented profile.
  */
 export default async function CreatorProfilePage({
   params,
