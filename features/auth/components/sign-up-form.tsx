@@ -15,18 +15,38 @@ import {
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 
-/** The reference's field chrome: bordered white input, rounded-xl, compact caption type. */
-const inputClassName =
-  "h-auto rounded-xl border-brand-neutral-200 bg-white px-3.5 py-2 text-xs text-brand-neutral-950 transition-all placeholder:text-brand-neutral-400 focus-visible:border-brand-primary focus-visible:ring-1 focus-visible:ring-brand-primary sm:py-2.5 sm:text-sm";
-
-/** The reference's submit: a small lime pill, right-aligned under the fields. */
-const submitClassName =
-  "h-8 cursor-pointer rounded-full bg-brand-accent px-7 text-xs font-bold text-brand-primary shadow-sm transition-all hover:bg-brand-accent-strong hover:shadow-md disabled:opacity-75 sm:text-sm";
+/**
+ * The frames' field chrome (47:371): a 52px white control, radius 12, a 1px INSIDE
+ * stroke in Neutral 100, 24px side padding and Satoshi 400 at 18px. The frame draws no
+ * focus state, so the primary focus ring here is an addition — a control with no visible
+ * focus indicator cannot be used from the keyboard.
+ *
+ * The `md:` copy of the size is not decoration: `Input`'s own base sets `text-base` and
+ * then `md:text-sm`, and a responsive variant out-ranks a plain one in the cascade, so
+ * without it the control would drop to 14px on tablet.
+ */
+const inputClassName = cn(
+  "h-[52px] rounded-xl border border-brand-neutral-100 bg-white px-6 text-[18px] leading-[28.8px] text-brand-neutral-950 transition-colors",
+  "placeholder:text-brand-neutral-400 focus-visible:border-brand-primary focus-visible:ring-1 focus-visible:ring-brand-primary",
+  "md:text-[18px]",
+);
 
 /**
- * The sign up form: full name, email and password, matching the reference screen field
- * for field. Validation is real and runs in the browser; submission is not — there is no
+ * The frames' submit (47:381): a lime pill 46px tall, radius 24, 24px side padding and
+ * Satoshi Medium 18 with a 21.6px line box, in Neutral 950. HUG width, so the pill is
+ * exactly its label plus 48 — 123px for "Continue", 104px for "Sign In".
+ */
+const submitClassName =
+  "h-[46px] cursor-pointer rounded-brand-pill bg-brand-accent px-6 text-[18px] leading-[21.6px] font-medium text-brand-neutral-950 transition-colors hover:bg-brand-accent-strong disabled:opacity-75";
+
+/**
+ * The sign up form: full name, email and password, matching frame 47:362 field for
+ * field — the frame has no password confirmation and no terms checkbox, so neither does
+ * this. Validation is real and runs in the browser; submission is not — there is no
  * backend here, and the confirmation says so rather than implying an account exists.
+ *
+ * The form is the field stack: a right-aligned column on a 24px gap, which is what puts
+ * the submit pill under the fields' right edge.
  */
 export function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -49,7 +69,7 @@ export function SignUpForm() {
     <form
       onSubmit={handleSubmit(onSubmit)}
       noValidate
-      className="space-y-3 sm:space-y-3.5"
+      className="flex w-full flex-col items-end gap-6"
     >
       <FormField
         id="fullName"
@@ -86,41 +106,38 @@ export function SignUpForm() {
         label="Password"
         error={errors.password?.message}
       >
-        <div className="relative">
+        <div className="relative w-full">
           <Input
             id="password"
             type={showPassword ? "text" : "password"}
             autoComplete="new-password"
-            placeholder="••••••••"
-            className={cn(inputClassName, "pr-10")}
+            placeholder="********"
+            className={cn(inputClassName, "pr-14")}
             aria-invalid={errors.password ? true : undefined}
             aria-describedby={errors.password ? "password-error" : undefined}
             {...register("password")}
           />
+          {/* The frames draw a plain control with no reveal affordance; this stays
+              because a masked field with no way to check it is not usable. It sits
+              inside the control, so it changes no measured box. */}
           <button
             type="button"
             onClick={() => setShowPassword((visible) => !visible)}
             aria-label={showPassword ? "Hide password" : "Show password"}
-            className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer p-1 text-brand-neutral-400 transition-colors hover:text-brand-neutral-700"
+            className="absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer text-brand-neutral-400 transition-colors hover:text-brand-neutral-700"
           >
             {showPassword ? (
-              <EyeOff aria-hidden className="size-4" />
+              <EyeOff aria-hidden className="size-5" />
             ) : (
-              <Eye aria-hidden className="size-4" />
+              <Eye aria-hidden className="size-5" />
             )}
           </button>
         </div>
       </FormField>
 
-      <div className="flex justify-end pt-1">
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          className={submitClassName}
-        >
-          {isSubmitting ? "Creating..." : "Continue"}
-        </Button>
-      </div>
+      <Button type="submit" disabled={isSubmitting} className={submitClassName}>
+        {isSubmitting ? "Creating..." : "Continue"}
+      </Button>
     </form>
   );
 }

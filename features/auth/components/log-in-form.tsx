@@ -15,18 +15,24 @@ import {
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 
-/** The reference's field chrome: bordered white input, rounded-xl, compact caption type. */
-const inputClassName =
-  "h-auto rounded-xl border-brand-neutral-200 bg-white px-3.5 py-2 text-xs text-brand-neutral-950 transition-all placeholder:text-brand-neutral-400 focus-visible:border-brand-primary focus-visible:ring-1 focus-visible:ring-brand-primary sm:py-2.5 sm:text-sm";
+/** The frames' field chrome — see `sign-up-form.tsx` for the measurements. */
+const inputClassName = cn(
+  "h-[52px] rounded-xl border border-brand-neutral-100 bg-white px-6 text-[18px] leading-[28.8px] text-brand-neutral-950 transition-colors",
+  "placeholder:text-brand-neutral-400 focus-visible:border-brand-primary focus-visible:ring-1 focus-visible:ring-brand-primary",
+  "md:text-[18px]",
+);
 
-/** The reference's submit: a small lime pill, right-aligned under the fields. */
+/** The frames' submit pill (49:239): 46px tall, radius 24, 24px side padding. */
 const submitClassName =
-  "h-8 cursor-pointer rounded-full bg-brand-accent px-7 text-xs font-bold text-brand-primary shadow-sm transition-all hover:bg-brand-accent-strong hover:shadow-md disabled:opacity-75 sm:text-sm";
+  "h-[46px] cursor-pointer rounded-brand-pill bg-brand-accent px-6 text-[18px] leading-[21.6px] font-medium text-brand-neutral-950 transition-colors hover:bg-brand-accent-strong disabled:opacity-75";
 
 /**
- * The log in form: email and password, matching the reference screen field for field.
- * Validation is real and runs in the browser; submission is not — there is no backend
- * here, and the confirmation says so rather than implying a session.
+ * The log in form: email and password, matching frame 49:220 field for field. Validation
+ * is real and runs in the browser; submission is not — there is no backend here, and the
+ * confirmation says so rather than implying a session.
+ *
+ * The frame's field block is the register one minus a row: two groups on a 24px gap with
+ * the submit pill right-aligned beneath them.
  */
 export function LogInForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -49,7 +55,7 @@ export function LogInForm() {
     <form
       onSubmit={handleSubmit(onSubmit)}
       noValidate
-      className="space-y-3 sm:space-y-3.5"
+      className="flex w-full flex-col items-end gap-6"
     >
       <FormField id="email" label="Email" error={errors.email?.message}>
         <Input
@@ -69,41 +75,37 @@ export function LogInForm() {
         label="Password"
         error={errors.password?.message}
       >
-        <div className="relative">
+        <div className="relative w-full">
           <Input
             id="password"
             type={showPassword ? "text" : "password"}
             autoComplete="current-password"
-            placeholder="••••••••"
-            className={cn(inputClassName, "pr-10")}
+            placeholder="********"
+            className={cn(inputClassName, "pr-14")}
             aria-invalid={errors.password ? true : undefined}
             aria-describedby={errors.password ? "password-error" : undefined}
             {...register("password")}
           />
+          {/* Not in the frames — a masked field with no way to check it is not usable.
+              It sits inside the control, so it changes no measured box. */}
           <button
             type="button"
             onClick={() => setShowPassword((visible) => !visible)}
             aria-label={showPassword ? "Hide password" : "Show password"}
-            className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer p-1 text-brand-neutral-400 transition-colors hover:text-brand-neutral-700"
+            className="absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer text-brand-neutral-400 transition-colors hover:text-brand-neutral-700"
           >
             {showPassword ? (
-              <EyeOff aria-hidden className="size-4" />
+              <EyeOff aria-hidden className="size-5" />
             ) : (
-              <Eye aria-hidden className="size-4" />
+              <Eye aria-hidden className="size-5" />
             )}
           </button>
         </div>
       </FormField>
 
-      <div className="flex justify-end pt-1">
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          className={submitClassName}
-        >
-          {isSubmitting ? "Signing in..." : "Sign In"}
-        </Button>
-      </div>
+      <Button type="submit" disabled={isSubmitting} className={submitClassName}>
+        {isSubmitting ? "Signing in..." : "Sign In"}
+      </Button>
     </form>
   );
 }

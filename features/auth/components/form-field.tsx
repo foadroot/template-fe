@@ -5,8 +5,12 @@ import { cn } from "@/lib/utils";
 
 /**
  * A labelled field that wires up the error message, so both auth forms announce invalid
- * input consistently instead of each rolling their own markup. The label treatment is
- * the reference's: a small, medium-weight neutral caption sitting right above the input.
+ * input consistently instead of each rolling their own markup.
+ *
+ * The label treatment is the frames' own (47:370 and its siblings): Satoshi Medium 14
+ * with a 17px line box — Figma renders the 16.8 as a whole pixel — Neutral 950, sitting
+ * 8px above the input: the gap the frame's field auto-layout uses between the label and
+ * the 52px control.
  */
 export function FormField({
   id,
@@ -22,10 +26,10 @@ export function FormField({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col", className)}>
+    <div className={cn("flex w-full flex-col", className)}>
       <Label
         htmlFor={id}
-        className="mb-1 block text-xs font-medium text-brand-neutral-700"
+        className="mb-2 block text-[14px] leading-[17px] font-medium text-brand-neutral-950"
       >
         {label}
       </Label>

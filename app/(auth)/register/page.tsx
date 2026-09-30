@@ -12,33 +12,30 @@ export const metadata: Metadata = {
 };
 
 /**
- * The sign up screen, mirroring the reference's signup page: the brand panel on the left
- * and the card (eyebrow, title, form, cross-link) on the right — the same frame as the
- * sign in screen, only the copy and the fields differ.
+ * The sign up screen, rebuilt from frame 47:351 (1440x1024).
+ *
+ * Every string below is the frame's own (read from its text nodes): the intro column at
+ * (122, 120), the card's eyebrow and two-line title, the three field labels and their
+ * placeholders, the "Continue" pill and the centred cross-link. The frame draws no
+ * password confirmation and no terms acknowledgement, so neither does this screen.
  *
  * UI only — no account is created on submit.
  */
 export default function RegisterPage() {
   return (
     <AuthScreen
-      headline="Sign up and come in"
-      subcopy="The registration process is straightforward, uncomplicated, and efficient, allowing users to sign up quickly, easily, and at no cost."
+      introHeading="Sign up and come in"
+      introBody="The registration process is straightforward, uncomplicated, and efficient, allowing users to sign up quickly, easily, and at no cost"
       eyebrow="Create an Account"
-      title={
-        <>
-          Welcome to
-          <br />
-          ByteSpace
-        </>
-      }
+      title="Welcome to ByteSpace"
       footer={
-        <p className="mt-4 text-center text-xs text-brand-neutral-400 sm:mt-5">
-          Already have an account?{" "}
+        <p className="flex gap-1 text-[16px] leading-[26px] text-brand-neutral-700">
+          Already have an account?
           <Link
             href={routes.publicRoutes.auth.login}
-            className="font-semibold text-brand-primary hover:underline"
+            className="text-brand-primary hover:underline"
           >
-            Log in
+            Login
           </Link>
         </p>
       }

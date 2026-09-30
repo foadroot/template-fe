@@ -1,76 +1,90 @@
 import type { ReactNode } from "react";
-import Link from "next/link";
 
-import { AuthArtwork } from "@/features/auth/components/auth-artwork";
-import { BrandLogo } from "@/components/shared/brand-logo";
-import { routes } from "@/config/routes";
+import { cn } from "@/lib/utils";
 
 /**
- * The shared frame of the sign in / sign up screens, ported from the reference site's
- * auth pages: a 12-column row on the brand ground, with the mark, headline, subcopy and
- * the illustration on the left (7 of 12) and the white form card on the right (5 of 12).
+ * The shared frame of the sign in / sign up screens, ported from the design's own
+ * `Register_Frame` / `Register_Frame` on nodes 47:362 and 49:220.
  *
- * The card carries the reference's header (a small blue eyebrow over a bold title) and
- * its centred cross-link footer; the form itself is `children` between the two. Both
- * screens render through here, so they cannot drift apart — only the copy differs.
+ * Two columns, measured at 1440: an intro column of 475 at x=122, a 144px gutter, and a
+ * white card of 579 flush to the content column's right edge (x=741..1320). The card is
+ * white, radius 24, with no stroke, 63px side padding and 61px above its content. Its
+ * 453px content column is a stack with a 40px gap between the eyebrow/title block and
+ * the fields, and — because the two frames stack differently — the frame and the card's
+ * bottom padding are derived from whether there is anything between the fields and the
+ * cross-link:
+ *
+ * - Register (47:363): fields, **122px**, cross-link, 51px to the card's edge.
+ * - Login (49:221): fields, **73px**, the "or" + social block, **73px**, cross-link,
+ *   40px to the card's edge.
+ *
+ * Both add up to the same 784px card, so the card itself needs no fixed height.
+ *
+ * The intro column's copy and the card's copy both differ per screen, and the form sits
+ * between them, so neither can live in a layout — this component takes them all and the
+ * two screens cannot drift apart.
  */
 export function AuthScreen({
-  headline,
-  subcopy,
+  introHeading,
+  introBody,
   eyebrow,
   title,
+  beforeFooter,
   footer,
   children,
 }: {
-  headline: string;
-  subcopy: string;
+  introHeading: string;
+  introBody: string;
   eyebrow: string;
-  title: ReactNode;
-  footer?: ReactNode;
+  title: string;
+  beforeFooter?: ReactNode;
+  footer: ReactNode;
   children: ReactNode;
 }) {
+  const hasAside = beforeFooter !== undefined;
+
   return (
-    <div className="mx-auto grid w-full max-w-5xl grid-cols-1 items-center gap-6 lg:grid-cols-12 lg:gap-8 xl:max-w-6xl xl:gap-12">
-      <div className="flex flex-col items-center text-center lg:col-span-6 lg:items-start lg:text-left xl:col-span-7">
-        <Link
-          href={routes.publicRoutes.home}
-          aria-label="ByteSpace Home"
-          className="group mb-3 inline-flex items-center rounded-lg transition-transform duration-200 hover:scale-105 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none sm:mb-4"
-        >
-          <BrandLogo
-            markOnly
-            className="h-8 w-8 shrink-0 sm:h-9 sm:w-9"
-            label="ByteSpace"
-          />
-        </Link>
-
-        <h1 className="font-display text-2xl font-bold leading-tight tracking-tight text-white sm:text-3xl lg:text-[34px]">
-          {headline}
+    <div className="grid gap-10 py-8 xl:grid-cols-[477px_579px] xl:gap-[144px] xl:items-start xl:py-0">
+      <div className="flex flex-col gap-4 xl:ml-[2px]">
+        <h1 className="font-display text-heading-xs font-semibold text-brand-neutral-50">
+          {introHeading}
         </h1>
-
-        <p className="mt-2 max-w-md text-xs leading-relaxed text-white/80 sm:text-sm">
-          {subcopy}
-        </p>
-
-        <div className="relative mt-4 w-full max-w-[260px] sm:mt-5 sm:max-w-[320px] lg:mt-6 lg:max-w-[380px] xl:max-w-[420px]">
-          <AuthArtwork />
-        </div>
+        <p className="text-body-l leading-[29px] text-brand-neutral-50">{introBody}</p>
       </div>
 
-      <div className="flex w-full justify-center lg:col-span-6 lg:justify-end xl:col-span-5">
-        <div className="w-full max-w-[420px] rounded-2xl border border-white/20 bg-white p-5 shadow-2xl sm:rounded-3xl sm:p-7 md:p-8">
-          <div className="mb-4 sm:mb-5">
-            <span className="block text-xs font-semibold text-brand-primary sm:text-sm">
-              {eyebrow}
-            </span>
-            <h2 className="mt-0.5 text-xl font-bold leading-tight tracking-tight text-brand-neutral-950 sm:text-2xl lg:text-[26px]">
-              {title}
-            </h2>
+      <div
+        className={cn(
+          "mx-auto w-full max-w-[579px] rounded-brand-panel bg-white px-6 py-10 sm:px-10 xl:mx-0 xl:px-[63px] xl:pt-[61px]",
+          hasAside ? "xl:pb-[40px]" : "xl:pb-[51px]",
+        )}
+      >
+        <div
+          className={cn(
+            "flex w-full flex-col gap-6",
+            hasAside ? "xl:gap-[73px]" : "xl:gap-[122px]",
+          )}
+        >
+          <div className="flex flex-col gap-10">
+            {/* Both frames stack these two with no gap: the eyebrow's 29px line box
+                ends exactly where the title's begins. Figma rounds each line box to a
+                whole pixel — 18/28.8 renders as 29, 44/52.8 as 53 — so the two are
+                pinned here; left at their computed values the card comes out 1.6px short
+                and every box below it drifts with it. */}
+            <div className="flex flex-col">
+              <p className="text-body-l leading-[29px] text-brand-primary">{eyebrow}</p>
+              <h2 className="font-display text-heading-m leading-[53px] font-semibold text-brand-neutral-950">
+                {title}
+              </h2>
+            </div>
+
+            {/* The frame's field stack is right-aligned (`counterAxisAlignItems: MAX`),
+                which is what puts the submit pill under the fields' right edge. */}
+            <div className="flex flex-col items-end gap-6">{children}</div>
           </div>
 
-          {children}
+          {beforeFooter}
 
-          {footer}
+          <div className="flex justify-center">{footer}</div>
         </div>
       </div>
     </div>
