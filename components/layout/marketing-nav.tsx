@@ -3,6 +3,7 @@ import { ShoppingBag } from "lucide-react";
 
 import { marketingNavLinks } from "@/components/layout/marketing-nav-links";
 import { MarketingNavHeader } from "@/components/layout/marketing-nav-header";
+import { MarketingNavLink } from "@/components/layout/marketing-nav-link";
 import { MarketingNavMenu } from "@/components/layout/marketing-nav-menu";
 import { BrandLogo } from "@/components/shared/brand-logo";
 import { Container } from "@/components/shared/container";
@@ -10,7 +11,9 @@ import { routes } from "@/config/routes";
 
 /**
  * The public site's header: the brand surface with the logo, the primary links and the
- * account entry points. Only the compact menu is interactive (design.md D4).
+ * account entry points. The link that matches the current page wears the lime at a heavier
+ * weight (see `MarketingNavLink`), and only the compact menu is otherwise interactive
+ * (design.md D4).
  *
  * Measured off the design's `Header_Frame` (1440x120): 120px tall, the logo group at
  * x=122, the link group centred on x=719, and the account group — Sign In, Join Us and a
@@ -45,12 +48,9 @@ export function MarketingNav() {
           <ul className="flex items-center gap-6">
             {marketingNavLinks.map((link) => (
               <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="rounded-full text-label-m text-white/95 outline-none hover:text-brand-accent focus-visible:ring-3 focus-visible:ring-white/60"
-                >
-                  {link.label}
-                </Link>
+                {/* The one client piece of the desktop header: knowing which link is
+                    current needs the pathname, and only this link needs it. */}
+                <MarketingNavLink link={link} />
               </li>
             ))}
           </ul>
