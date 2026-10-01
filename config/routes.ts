@@ -10,8 +10,8 @@ export const routes = {
       /** The "Search Page" frame — browse and search the course catalogue. */
       list: "/courses",
       detail: (slug: string) => `/courses/${slug}`,
-      lessons: (slug: string) => `/courses/${slug}/lessons`,
-      reviews: (slug: string) => `/courses/${slug}/reviews`,
+      lessons: (slug: string) => `/courses/${slug}?tab=lessons`,
+      reviews: (slug: string) => `/courses/${slug}?tab=reviews`,
     },
     creators: {
       /** The discovery list: search, category chips and paging over the roster. */

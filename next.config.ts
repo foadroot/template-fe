@@ -15,6 +15,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/courses/:slug/lessons",
+        destination: "/courses/:slug?tab=lessons",
+        permanent: true,
+      },
+      {
+        source: "/courses/:slug/reviews",
+        destination: "/courses/:slug?tab=reviews",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

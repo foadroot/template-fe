@@ -1,18 +1,17 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { Container } from "@/components/shared/container";
 import { SectionErrorBoundary } from "@/components/shared/section-error-boundary";
 import { routes } from "@/config/routes";
 import {
-  CourseAbout,
   CourseHero,
-  CourseTabs,
-  EnrollCard,
+  CourseTabsSection,
   readCourse,
+  type CourseTabId,
 } from "@/features/courses";
 
 type CourseParams = Promise<{ slug: string }>;
+type CourseSearchParams = Promise<{ tab?: string }>;
 
 export async function generateMetadata({
   params,
@@ -34,48 +33,46 @@ export async function generateMetadata({
 }
 
 /**
- * The Course Details route, matching the design's frame (55:4066): the blue band with
- * the video, then the 725px About panel with the enrolment card floating alongside it.
- *
- * The card is the first thing in the markup so a narrow screen reads it above the tabs;
- * from the wide breakpoint up it leaves the flow and pins itself over the band, which is
- * where the frame draws it. An unknown slug falls through to the branded 404 rather than
- * to an invented course.
+ * The Course Details route:
+ * - Blue hero band featuring the headline, metadata badges, share control, video preview player,
+ *   and the floating enrolment card.
+ * - Interactive client tabs (About, Lessons, Reviews) switching content seamlessly in-page.
  */
 export default async function CourseDetailPage({
   params,
+  searchParams,
 }: {
   params: CourseParams;
+  searchParams?: CourseSearchParams;
 }) {
   const { slug } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const tab = resolvedSearchParams?.tab;
   const course = readCourse(slug);
 
   if (!course) {
     notFound();
   }
 
+  const initialTab: CourseTabId =
+    tab === "lessons" || tab === "reviews" || tab === "about"
+      ? tab
+      : "about";
+
   return (
     <>
       <SectionErrorBoundary name="Course hero">
-        <CourseHero content={course.hero} />
+        <CourseHero content={course.hero} enrollContent={course.enroll} />
       </SectionErrorBoundary>
 
-      <SectionErrorBoundary name="About and enrolment">
-        <section className="pt-[62.5px] pb-[64.5px]">
-          <Container className="relative">
-            <EnrollCard content={course.enroll} />
-
-            <CourseTabs
-              tabs={course.tabs}
-              active="about"
-              className="mt-10 lg:mt-0 lg:w-[725px]"
-            />
-            <CourseAbout
-              content={course.about}
-              className="mt-10 lg:w-[725px]"
-            />
-          </Container>
-        </section>
+      <SectionErrorBoundary name="Course tabs and details">
+        <CourseTabsSection
+          tabs={course.tabs}
+          initialTab={initialTab}
+          about={course.about}
+          lessons={course.lessons}
+          reviews={course.reviews}
+        />
       </SectionErrorBoundary>
     </>
   );

@@ -42,7 +42,7 @@ export function EnrollCard({
   return (
     <aside
       className={cn(
-        "w-full rounded-[24px] border border-brand-border bg-white p-[39px] lg:absolute lg:top-[-603.5px] lg:right-6 lg:w-[412px]",
+        "w-full rounded-[24px] border border-brand-border bg-white p-[32px] sm:p-[39px] shadow-xl",
         className,
       )}
     >

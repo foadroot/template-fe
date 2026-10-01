@@ -23,26 +23,26 @@ export const courseCoverImages: readonly string[] = [
 ];
 
 /** The detail hero's video player still (frame 55:4066, 3/2 inside the band). */
-export const courseVideoCover = "/unsplash/video-cover.jpg";
+export const courseVideoCover = "/course-details/video-cover.jpg";
 
 /** The About panel's four 167×125 sneak-peak thumbnails, in row order. */
 export const courseGalleryImages: readonly string[] = [
-  "/unsplash/sneak-peak-01.jpg",
-  "/unsplash/sneak-peak-02.jpg",
-  "/unsplash/sneak-peak-03.jpg",
-  "/unsplash/sneak-peak-04.jpg",
+  "/course-details/sneak-peak-01.jpg",
+  "/course-details/sneak-peak-02.jpg",
+  "/course-details/sneak-peak-03.jpg",
+  "/course-details/sneak-peak-04.jpg",
 ];
 
 /** The enrolment card's 52px creator portrait. */
-export const courseCreatorAvatar = "/unsplash/avatar-creator.jpg";
+export const courseCreatorAvatar = "/course-details/avatar-creator.jpg";
 
 /**
  * The four review portraits, matching the four reviews `course-detail.data.ts` draws;
  * the modulo keeps a longer fixture list supplied if one is ever added.
  */
 export const reviewerAvatars: readonly string[] = [
-  "/unsplash/avatar-reviewer-01.jpg",
-  "/unsplash/avatar-reviewer-02.jpg",
-  "/unsplash/avatar-reviewer-03.jpg",
-  "/unsplash/avatar-reviewer-04.jpg",
+  "/course-reviews/avatar-reviewer-01.png",
+  "/course-reviews/avatar-reviewer-02.png",
+  "/course-reviews/avatar-reviewer-03.png",
+  "/course-reviews/avatar-reviewer-04.png",
 ];

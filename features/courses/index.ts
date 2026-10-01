@@ -16,6 +16,7 @@ export { CourseTabs } from "./components/course-tabs";
 export { CourseAbout } from "./components/course-about";
 export { CourseLessons } from "./components/course-lessons";
 export { CourseReviews } from "./components/course-reviews";
+export { CourseTabsSection } from "./components/course-tabs-section";
 export { EnrollCard } from "./components/enroll-card";
 
 export type {
