@@ -247,6 +247,16 @@
   --animate-orbit: float-orbit 48s linear infinite;
   --animate-pop: pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   --animate-enter: enter-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  /* Tab panel flow — the Course Detail tabs. Each switch plays one `-enter-*` and one
+     `-exit-*`: moving toward a later tab (About → Lessons → Reviews) the new panel
+     rises while the old one drops, moving back the directions swap, so every switch
+     reads as a flow up paired with a flow down. The exit is deliberately shorter —
+     it only has to clear the panel before the enter finishes. */
+  --animate-tab-enter-up: tab-enter-up 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-tab-enter-down: tab-enter-down 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-tab-exit-down: tab-exit-down 0.2s cubic-bezier(0.33, 1, 0.68, 1) both;
+  --animate-tab-exit-up: tab-exit-up 0.2s cubic-bezier(0.33, 1, 0.68, 1) both;
 }
 
 :root {
@@ -459,7 +469,7 @@
    ---------------------------------------------------------------------------
    The marketing pages scroll the document itself, so Lenis runs in window mode and
    toggles its state classes on <html> (see components/shared/smooth-scroll.tsx).
-   `scroll-behavior: smooth` would otherwise fight Lenis's own lerp ΓÇö the `!important`
+   `scroll-behavior: smooth` would otherwise fight Lenis's own lerp — the `!important`
    override wins over any utility or browser default. The remaining four rules are the
    library's documented CSS contract: document heights stay content-driven while the
    `lenis` class is on <html>, nested scroll areas opt out of the smoothing themselves,
@@ -558,7 +568,7 @@ html.lenis body {
 /* ===========================================================================
    Motion kit
    ===========================================================================
-   Three families, all plain CSS on purpose — no animation library ships with this
+   Four families, all plain CSS on purpose — no animation library ships with this
    app, and Tailwind v4's CSS-first config is where this file already keeps its
    keyframes (nav-open, nav-item-in).
 
@@ -569,6 +579,8 @@ html.lenis body {
                           components/motion/reveal.tsx via data-revealed
      4. Cursor parallax — `.parallax-layer`, fed --parallax-x/y by
                           components/motion/parallax.tsx
+     5. Tab panel flow  — `animate-tab-enter-up` / `-enter-down` / `-exit-up` /
+                          `-exit-down`, the Course Detail tab switch
 
    Every transform below lives on `transform`, which Tailwind v4's own translate /
    scale / rotate utilities do not use (they emit the individual `translate`, `scale`
@@ -631,6 +643,55 @@ html.lenis body {
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0);
+  }
+}
+
+/* The Course Detail tab panels. The name is the direction of travel: `-enter-up`
+   starts below and rises into place, `-exit-down` starts at rest and drops away, and
+   the two `-down` / `-up` twins run the mirror for a backwards switch. Travelling in
+   opposite directions within a switch is what makes the old panel appear to flow out
+   while the new one flows in, rather than one panel simply replacing the other. */
+@keyframes tab-enter-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes tab-enter-down {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -28px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes tab-exit-down {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+  }
+}
+
+@keyframes tab-exit-up {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -28px, 0);
   }
 }
 
@@ -726,6 +787,10 @@ details[open] > .menu-pop {
   .animate-orbit,
   .animate-pop,
   .animate-enter,
+  .animate-tab-enter-up,
+  .animate-tab-enter-down,
+  .animate-tab-exit-down,
+  .animate-tab-exit-up,
   details[open] > .menu-pop {
     animation: none !important;
   }
