@@ -12,6 +12,20 @@ export const marketingNavLinks: readonly MarketingLink[] = [
   { label: "Creators", href: routes.publicRoutes.creators.list },
 ];
 
+/**
+ * Whether `href` is the section the visitor is on — the single matcher behind both
+ * nav treatments (the desktop header's active link and the mobile menu's
+ * `aria-current` row). Home matches only `/`; every other link also matches the
+ * routes beneath it, so `/courses/[slug]` still counts as Courses rather than
+ * leaving the header with nothing active. Query strings don't participate —
+ * `usePathname` returns the path alone, and a filtered list (`?category=design`)
+ * is still that section.
+ */
+export function isLinkActive(pathname: string, href: string) {
+  if (href === routes.publicRoutes.home) return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 /** Catalogue links filter the course listing, so they resolve to a real page. */
 const category = (slug: string) => `${routes.publicRoutes.courses.list}?category=${slug}`;
 

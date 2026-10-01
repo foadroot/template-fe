@@ -26,7 +26,10 @@ const includeIcon: Record<CourseIncludeIcon, LucideIcon> = {
  *
  * It is absolutely placed from the wider breakpoint up, which is also what lets it stay
  * first in the markup: on a narrow screen it reads as the call to action above the tabs,
- * and on a wide one it floats beside them without taking part in the column's flow.
+ * and on a wide one it floats beside them without taking part in the column's flow. Once
+ * `EnrollCardRail` has measured the page, that wide-screen copy is hidden and the rail
+ * renders this card instead — same coordinates, but stuck below the header for as long
+ * as the tabs section is on screen.
  *
  * The line heights are the frame's own — the 16px body face runs at 26px there rather
  * than the scale's 24px, and the syllabus titles run at 19px so two lines land on the

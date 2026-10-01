@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 
 import {
+  isLinkActive,
   marketingNavLinks,
   type MarketingLink,
 } from "@/components/layout/marketing-nav-links";
@@ -29,11 +30,6 @@ const ctaLink: MarketingLink = {
   label: "Join Us",
   href: routes.publicRoutes.auth.register,
 };
-
-function isLinkActive(pathname: string, href: string) {
-  if (href === routes.publicRoutes.home) return pathname === "/";
-  return pathname === href;
-}
 
 /**
  * The compact navigation for narrow viewports.
