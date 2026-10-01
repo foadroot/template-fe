@@ -24,10 +24,10 @@ export function CourseTabs({
         const selected = tab.id === active;
 
         const commonClassName = cn(
-          "inline-flex h-[43px] items-center justify-center rounded-brand-pill px-6 text-label-m font-medium outline-none transition-colors focus-visible:ring-3 focus-visible:ring-brand-primary/40 cursor-pointer",
+          "inline-flex h-[43px] items-center justify-center rounded-brand-pill px-6 text-label-m outline-none transition-colors focus-visible:ring-3 focus-visible:ring-brand-primary/40 cursor-pointer",
           selected
-            ? "bg-brand-accent text-brand-foreground shadow-xs font-semibold"
-            : "bg-brand-surface-muted text-brand-neutral-700 hover:bg-brand-neutral-100",
+            ? "bg-brand-accent font-bold text-brand-lime-800 shadow-xs"
+            : "font-medium bg-brand-surface-muted text-brand-neutral-700 hover:bg-brand-neutral-100",
         );
 
         if (onTabChange) {
