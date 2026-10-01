@@ -12,6 +12,7 @@ export { CategoryPills } from "./components/category-pills";
 export { CourseResults } from "./components/course-results";
 export { CoursesPagination } from "./components/courses-pagination";
 export { CourseHero } from "./components/course-hero";
+export { CourseDetailBody } from "./components/course-detail-body";
 export { CourseTabs } from "./components/course-tabs";
 export { CourseAbout } from "./components/course-about";
 export { CourseLessons } from "./components/course-lessons";

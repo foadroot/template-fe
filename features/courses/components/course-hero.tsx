@@ -1,5 +1,6 @@
 import { Play, Share2, SignalHigh, Star, Users } from "lucide-react";
 import { type LucideIcon } from "lucide-react";
+import { type RefObject } from "react";
 
 import { Container } from "@/components/shared/container";
 import { ImagePlaceholder } from "@/components/shared/image-placeholder";
@@ -22,13 +23,24 @@ const factIcon: Record<CourseFactIcon, LucideIcon> = {
  * The blue band at the top of the Course Details page:
  * - Headline, subtitle, creator highlight and fact pills against the Share control.
  * - Video preview player side-by-side with the white enrolment card.
+ *
+ * On desktop the card is a measuring anchor rather than the card the reader follows:
+ * `enrollAnchorRef` marks the cell `EnrollCardRail` reads to learn where the card
+ * belongs, and `enrollPinned` hides this copy once the rail owns it — the two share
+ * the same coordinates, so the hand-off is invisible.
  */
 export function CourseHero({
   content,
   enrollContent,
+  enrollPinned = false,
+  enrollAnchorRef,
 }: {
   content: CourseHeroContent;
   enrollContent?: EnrollCardContent;
+  /** True once the sticky rail has measured its offset and taken the card over. */
+  enrollPinned?: boolean;
+  /** Attached to the card's grid cell so the rail can measure its position. */
+  enrollAnchorRef?: RefObject<HTMLDivElement | null>;
 }) {
   const creatorText = content.creator.value;
   const isByPrefix = creatorText.toLowerCase().startsWith("by ");
@@ -115,10 +127,17 @@ export function CourseHero({
             </button>
           </div>
 
-          {/* Right: Enroll Card */}
+          {/* Right: Enroll Card. The cell is the rail's measurement anchor — it keeps
+              its zero-height position at the top of the media row even while the card
+              inside it is handed over to the rail. */}
           {enrollContent && (
-            <div className="relative w-full lg:w-[412px]">
-              <div className="w-full lg:absolute lg:top-0 lg:left-0 lg:w-[412px] z-20">
+            <div ref={enrollAnchorRef} className="relative w-full lg:w-[412px]">
+              <div
+                className={cn(
+                  "z-20 w-full lg:absolute lg:top-0 lg:left-0 lg:w-[412px]",
+                  enrollPinned && "lg:hidden",
+                )}
+              >
                 <EnrollCard content={enrollContent} />
               </div>
             </div>

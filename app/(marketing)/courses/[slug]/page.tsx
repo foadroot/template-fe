@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { SectionErrorBoundary } from "@/components/shared/section-error-boundary";
 import { routes } from "@/config/routes";
 import {
-  CourseHero,
-  CourseTabsSection,
+  CourseDetailBody,
   readCourse,
   type CourseTabId,
 } from "@/features/courses";
@@ -37,6 +35,8 @@ export async function generateMetadata({
  * - Blue hero band featuring the headline, metadata badges, share control, video preview player,
  *   and the floating enrolment card.
  * - Interactive client tabs (About, Lessons, Reviews) switching content seamlessly in-page.
+ * - The enrolment card pins below the header while the tabs scroll, then releases with
+ *   them — see CourseDetailBody, which owns that hand-off.
  */
 export default async function CourseDetailPage({
   params,
@@ -60,20 +60,14 @@ export default async function CourseDetailPage({
       : "about";
 
   return (
-    <>
-      <SectionErrorBoundary name="Course hero">
-        <CourseHero content={course.hero} enrollContent={course.enroll} />
-      </SectionErrorBoundary>
-
-      <SectionErrorBoundary name="Course tabs and details">
-        <CourseTabsSection
-          tabs={course.tabs}
-          initialTab={initialTab}
-          about={course.about}
-          lessons={course.lessons}
-          reviews={course.reviews}
-        />
-      </SectionErrorBoundary>
-    </>
+    <CourseDetailBody
+      hero={course.hero}
+      enroll={course.enroll}
+      tabs={course.tabs}
+      initialTab={initialTab}
+      about={course.about}
+      lessons={course.lessons}
+      reviews={course.reviews}
+    />
   );
 }
