@@ -14,6 +14,7 @@ import {
   type CreatorsQuery,
 } from "@/features/creators/types/creators.types";
 import { useDebounce } from "@/hooks/useDebounce";
+import { getLenis } from "@/lib/lenis-instance";
 
 /** How long the field waits after the last keystroke before the URL catches up. */
 const SEARCH_DEBOUNCE_MS = 300;
@@ -64,9 +65,20 @@ export function CreatorsHero({
   }, [debounced, query, router]);
 
   const scrollToGrid = () => {
-    document
-      .getElementById(CREATORS_GRID_ANCHOR)
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const target = document.getElementById(CREATORS_GRID_ANCHOR);
+    if (!target) return;
+
+    // Lenis owns the marketing pages' scroll (see components/shared/smooth-scroll.tsx):
+    // a native smooth `scrollIntoView` would move the real position without telling
+    // Lenis, so the next wheel input would animate back to its stale position and snap
+    // the page. Routing through the instance keeps its tracked position honest; the
+    // fallback below only covers the unmounted case.
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo(target);
+    } else {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   return (
